@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-headline: 'Hanken Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+}
+
+.font-headline {
+  font-family: var(--font-headline);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
+}
+
+.material-symbols-outlined.fill {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.reveal-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: reveal 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes reveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-delay-1 { animation-delay: 0.1s; }
+.reveal-delay-2 { animation-delay: 0.2s; }
+.reveal-delay-3 { animation-delay: 0.3s; }
+.reveal-delay-4 { animation-delay: 0.4s; }
+
+.isometric-hero {
+  perspective: 2000px;
+}
+
+.isometric-card {
+  transform: rotateX(4deg) rotateY(-4deg);
+  transition: transform 0.3s ease;
+}
+
+.isometric-card:hover {
+  transform: rotateX(0deg) rotateY(0deg) translateY(-4px);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+.section-tick {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #3f3f46;
+  margin: 16px auto;
+}
+
+/* React Quill Dark Mode Overrides */
+.quill-dark-wrapper .ql-toolbar {
+  border: none !important;
+  border-bottom: 1px solid #27272a !important;
+  background-color: #18181b;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  padding: 8px !important;
+}
+
+.quill-dark-wrapper .ql-container {
+  border: none !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: var(--font-body) !important;
+  font-size: 14px !important;
+}
+
+.quill-dark-wrapper .ql-editor {
+  flex: 1;
+  overflow-y: auto;
+  color: #e4e4e7;
+  padding: 1rem !important;
+}
+
+.quill-dark-wrapper .ql-editor.ql-blank::before {
+  color: #71717a !important;
+  font-style: normal !important;
+}
+
+.quill-dark-wrapper .ql-stroke {
+  stroke: #a1a1aa !important;
+}
+
+.quill-dark-wrapper .ql-fill {
+  fill: #a1a1aa !important;
+}
+
+.quill-dark-wrapper .ql-picker-label {
+  color: #a1a1aa !important;
+}
+
+.quill-dark-wrapper .ql-picker-options {
+  background-color: #27272a !important;
+  border: 1px solid #3f3f46 !important;
+}
+
+.quill-dark-wrapper button:hover .ql-stroke,
+.quill-dark-wrapper .ql-picker-label:hover .ql-stroke {
+  stroke: #fff !important;
+}
+
+.quill-dark-wrapper button:hover .ql-fill,
+.quill-dark-wrapper .ql-picker-label:hover .ql-fill {
+  fill: #fff !important;
+}

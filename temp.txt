@@ -1,0 +1,9 @@
+        {/* Animated Background Overlay */}
+        <div className="absolute inset-0 z-0">
+           <img 
+             src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80" 
+             alt="University Campus" 
+             className="w-full h-full object-cover opacity-20"
+           />
+           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/80 via-zinc-950/80 to-indigo-950/90 mix-blend-multiply" />
+        </div>

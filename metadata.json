@@ -1,0 +1,6 @@
+{
+  "name": "Taj Institute of Technology and Applied Network",
+  "description": "Taj Institute of Technology and Applied Network - TITAN Academic Portal and Learning Management System.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

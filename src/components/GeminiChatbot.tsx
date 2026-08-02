@@ -233,7 +233,7 @@ export const GeminiChatbot: React.FC<GeminiChatbotProps> = ({
             <span className="text-[10px] font-mono text-indigo-100 opacity-90 flex items-center gap-1">
               <span>Voice Ready</span>
               <span>•</span>
-              <span>Gemini 2.5</span>
+              <span>Gemini 3.6</span>
             </span>
           </div>
         </button>

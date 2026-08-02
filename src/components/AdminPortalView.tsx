@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { UserItem, SystemMetrics } from '../types';
+import React, { useState, useEffect } from 'react';
+import { UserItem, SystemMetrics, LeaveRequest } from '../types';
 
 interface AdminPortalViewProps {
   users: UserItem[];
@@ -10,6 +10,9 @@ interface AdminPortalViewProps {
   onBroadcastAnnouncement: () => void;
   onUserAction: (userId: string, action: string) => void;
   theme?: 'dark' | 'light';
+  leaveRequests?: LeaveRequest[];
+  onApproveLeave?: (id: string, comment?: string) => void;
+  onRejectLeave?: (id: string, comment?: string) => void;
 }
 
 export const AdminPortalView: React.FC<AdminPortalViewProps> = ({
@@ -21,10 +24,109 @@ export const AdminPortalView: React.FC<AdminPortalViewProps> = ({
   onBroadcastAnnouncement,
   onUserAction,
   theme = 'dark',
+  leaveRequests: propLeaveRequests,
+  onApproveLeave: propOnApproveLeave,
+  onRejectLeave: propOnRejectLeave
 }) => {
   const [roleFilter, setRoleFilter] = useState('All Users');
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [leaveStatusFilter, setLeaveStatusFilter] = useState<'All' | 'Pending' | 'Approved' | 'Rejected'>('All');
+  const [selectedLeaveAction, setSelectedLeaveAction] = useState<{ req: LeaveRequest; type: 'Approve' | 'Reject' } | null>(null);
+  const [reviewNote, setReviewNote] = useState('');
+
   const isDark = theme === 'dark';
+
+  const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>(() => {
+    if (propLeaveRequests && propLeaveRequests.length > 0) return propLeaveRequests;
+    const saved = localStorage.getItem('titan_leave_requests');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return [
+      {
+        id: 'leave-101',
+        studentId: 'TITAN-2026-889123',
+        studentName: 'Alex Rivers',
+        studentEmail: 'alex@titan.edu',
+        course: 'CS101 • Advanced AI',
+        startDate: '2026-08-10',
+        endDate: '2026-08-12',
+        reasonCategory: 'Medical',
+        reasonDetails: 'Scheduled dental procedure requiring 2 days of home rest.',
+        status: 'Pending',
+        submittedAt: '2026-08-01 09:30 AM'
+      }
+    ];
+  });
+
+  useEffect(() => {
+    if (propLeaveRequests) setLeaveRequests(propLeaveRequests);
+  }, [propLeaveRequests]);
+
+  const handleConfirmLeaveAction = () => {
+    if (!selectedLeaveAction) return;
+
+    const { req, type } = selectedLeaveAction;
+    const newStatus = type === 'Approve' ? 'Approved' : 'Rejected';
+
+    if (propOnApproveLeave && type === 'Approve') {
+      propOnApproveLeave(req.id, reviewNote);
+    } else if (propOnRejectLeave && type === 'Reject') {
+      propOnRejectLeave(req.id, reviewNote);
+    }
+
+    const updated = leaveRequests.map(r => {
+      if (r.id === req.id) {
+        return {
+          ...r,
+          status: newStatus as 'Approved' | 'Rejected',
+          reviewComment: reviewNote || (type === 'Approve' ? 'Approved by Academic Admin Board' : 'Rejected by Academic Admin Board'),
+          reviewedBy: 'Academic Admin',
+          reviewedAt: new Date().toLocaleString()
+        };
+      }
+      return r;
+    });
+
+    setLeaveRequests(updated);
+    localStorage.setItem('titan_leave_requests', JSON.stringify(updated));
+
+    setSelectedLeaveAction(null);
+    setReviewNote('');
+  };
+
+  const handleExportCSV = () => {
+    // Filter users if 'Students' selected, otherwise default to all users or students
+    const dataToExport = roleFilter === 'Students' ? filteredUsers : users.filter(u => u.role === 'STUDENT').length > 0 ? users.filter(u => u.role === 'STUDENT') : users;
+
+    const headers = ['User ID', 'Name', 'Email', 'Role', 'Status', 'Joined Date', 'Performance Metric', 'Performance Value'];
+    
+    const rows = dataToExport.map((u) => [
+      `"${(u.id || '').replace(/"/g, '""')}"`,
+      `"${(u.name || '').replace(/"/g, '""')}"`,
+      `"${(u.email || '').replace(/"/g, '""')}"`,
+      `"${(u.role || '').replace(/"/g, '""')}"`,
+      `"${(u.status || '').replace(/"/g, '""')}"`,
+      `"${(u.joinedDate || '').replace(/"/g, '""')}"`,
+      `"${(u.performanceLabel || '').replace(/"/g, '""')}"`,
+      `"${u.performancePercent ?? ''}"`
+    ]);
+
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `titan_students_export_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   const filteredUsers = users.filter((u) => {
     if (roleFilter === 'All Users') return true;
@@ -52,16 +154,13 @@ export const AdminPortalView: React.FC<AdminPortalViewProps> = ({
             Real-time performance metrics across the TITAN LMS ecosystem.
           </p>
         </div>
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-2 shrink-0 flex-wrap">
           <button
-            onClick={() => alert('Generating system report export...')}
-            className={`px-4 py-2 rounded-full border font-mono text-xs font-bold transition-colors ${
-              isDark
-                ? 'border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white'
-                : 'border-zinc-300 text-zinc-700 hover:bg-zinc-200 hover:text-zinc-900'
-            }`}
+            onClick={handleExportCSV}
+            className="px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-mono text-xs font-bold shadow-xs transition-all flex items-center gap-1.5"
           >
-            Export Report
+            <span className="material-symbols-outlined text-base">download</span>
+            <span>Export Student Data</span>
           </button>
           <button
             onClick={() => alert('Opening live telemetry stream...')}
@@ -363,6 +462,219 @@ export const AdminPortalView: React.FC<AdminPortalViewProps> = ({
         </div>
       </div>
 
+      {/* Student Leave Applications & Attendance Approvals Section */}
+      <div className={`border rounded-[2rem] overflow-hidden shadow-2xs ${
+        isDark ? 'border-zinc-800 bg-zinc-900 text-white' : 'border-zinc-200 bg-white text-zinc-900 shadow-sm shadow-zinc-200/50'
+      }`}>
+        <div className={`p-6 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+          isDark ? 'border-zinc-800 bg-zinc-950/60' : 'border-zinc-200 bg-slate-100/80'
+        }`}>
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                Attendance Governance
+              </span>
+              <span className="text-xs font-mono text-zinc-400">
+                {leaveRequests.filter(r => r.status === 'Pending').length} Pending Requests
+              </span>
+            </div>
+            <h3 className={`font-bold text-xl font-headline ${isDark ? 'text-white' : 'text-zinc-900'}`}>
+              Student Leave Applications & Approvals
+            </h3>
+            <p className={`text-xs font-body ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+              Review and approve absence requests submitted by students. Approved leaves update student attendance records.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {(['All', 'Pending', 'Approved', 'Rejected'] as const).map(st => (
+              <button
+                key={st}
+                onClick={() => setLeaveStatusFilter(st)}
+                className={`px-3 py-1.5 rounded-full text-xs font-mono font-bold transition-all ${
+                  leaveStatusFilter === st
+                    ? 'bg-indigo-600 text-white'
+                    : isDark ? 'bg-zinc-800 text-zinc-400 hover:text-white' : 'bg-slate-200 text-zinc-700 hover:bg-slate-300'
+                }`}
+              >
+                {st}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs font-body">
+            <thead>
+              <tr className={`border-b font-mono text-[10px] uppercase tracking-wider ${
+                isDark ? 'border-zinc-800 text-zinc-400 bg-zinc-950/30' : 'border-zinc-200 text-zinc-500 bg-slate-50'
+              }`}>
+                <th className="py-3 px-4">Student Info</th>
+                <th className="py-3 px-4">Course</th>
+                <th className="py-3 px-4">Leave Duration</th>
+                <th className="py-3 px-4">Reason Details</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className={`divide-y ${isDark ? 'divide-zinc-800/60' : 'divide-zinc-200'}`}>
+              {leaveRequests
+                .filter(r => leaveStatusFilter === 'All' || r.status === leaveStatusFilter)
+                .length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-8 text-center font-mono text-xs text-zinc-500">
+                    No leave applications matching selected filter "{leaveStatusFilter}".
+                  </td>
+                </tr>
+              ) : (
+                leaveRequests
+                  .filter(r => leaveStatusFilter === 'All' || r.status === leaveStatusFilter)
+                  .map((req) => (
+                    <tr key={req.id} className="hover:bg-zinc-800/30 transition-colors">
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={req.studentAvatar || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY2OfwmS2bIeSMUT_DnrlEfRIDAARXIsxGtcwuXbmeWA&s=10'}
+                            alt=""
+                            className="w-9 h-9 rounded-full object-cover border border-indigo-500/30"
+                          />
+                          <div>
+                            <p className="font-bold text-white font-headline">{req.studentName}</p>
+                            <p className="text-[10px] font-mono text-zinc-400">{req.studentEmail}</p>
+                            <span className="text-[9px] font-mono text-indigo-400">ID: {req.studentId}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        <p className="font-bold">{req.course}</p>
+                        <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                          {req.reasonCategory}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-4 font-mono">
+                        <p className="font-bold text-white">{req.startDate}</p>
+                        <p className="text-[10px] text-zinc-400">to {req.endDate}</p>
+                      </td>
+                      <td className="py-3.5 px-4 max-w-xs">
+                        <p className="text-xs text-zinc-300 line-clamp-2 font-body">
+                          "{req.reasonDetails}"
+                        </p>
+                        <p className="text-[9px] font-mono text-zinc-500 mt-0.5">Submitted: {req.submittedAt}</p>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        {req.status === 'Pending' && (
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center gap-1 w-fit">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                            Pending Review
+                          </span>
+                        )}
+                        {req.status === 'Approved' && (
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1 w-fit">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            Approved
+                          </span>
+                        )}
+                        {req.status === 'Rejected' && (
+                          <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center gap-1 w-fit">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+                            Rejected
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-4 text-right">
+                        {req.status === 'Pending' ? (
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => {
+                                setSelectedLeaveAction({ req, type: 'Approve' });
+                                setReviewNote('Approved - Supporting details verified.');
+                              }}
+                              className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-[11px] font-bold transition-all shadow-xs flex items-center gap-1"
+                            >
+                              <span className="material-symbols-outlined text-sm">check</span>
+                              Approve
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSelectedLeaveAction({ req, type: 'Reject' });
+                                setReviewNote('Rejected - Insufficient documentation.');
+                              }}
+                              className="px-3 py-1.5 rounded-lg bg-rose-600/80 hover:bg-rose-600 text-white font-mono text-[11px] font-bold transition-all shadow-xs flex items-center gap-1"
+                            >
+                              <span className="material-symbols-outlined text-sm">close</span>
+                              Reject
+                            </button>
+                          </div>
+                        ) : (
+                          <span className="text-[10px] font-mono text-zinc-500 italic">
+                            Reviewed by {req.reviewedBy || 'Admin'}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Leave Review Action Modal */}
+      {selectedLeaveAction && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className={`max-w-md w-full p-6 rounded-[2rem] border shadow-2xl ${
+            isDark ? 'bg-zinc-900 border-zinc-800 text-white' : 'bg-white border-zinc-200 text-zinc-900'
+          }`}>
+            <h4 className="font-headline font-bold text-xl mb-1">
+              {selectedLeaveAction.type === 'Approve' ? 'Approve Leave Request' : 'Reject Leave Application'}
+            </h4>
+            <p className="text-xs font-mono text-zinc-400 mb-4">
+              Student: <strong className="text-white">{selectedLeaveAction.req.studentName}</strong> ({selectedLeaveAction.req.course})
+            </p>
+
+            <div className="space-y-3 mb-4">
+              <div>
+                <label className="block text-xs font-mono font-bold text-zinc-400 mb-1">
+                  Official Admin Review Note / Justification
+                </label>
+                <textarea
+                  rows={3}
+                  value={reviewNote}
+                  onChange={(e) => setReviewNote(e.target.value)}
+                  placeholder="Enter review notes for student record..."
+                  className={`w-full px-4 py-3 rounded-xl text-xs font-body focus:outline-none focus:ring-2 ${
+                    selectedLeaveAction.type === 'Approve' ? 'focus:ring-emerald-500' : 'focus:ring-rose-500'
+                  } ${
+                    isDark ? 'bg-zinc-950 border border-zinc-800 text-white' : 'bg-slate-100 border border-zinc-300 text-zinc-900'
+                  }`}
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-2 border-t border-zinc-800">
+              <button
+                type="button"
+                onClick={() => setSelectedLeaveAction(null)}
+                className="px-4 py-2.5 rounded-full text-xs font-mono font-bold bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmLeaveAction}
+                className={`px-5 py-2.5 rounded-full text-xs font-mono font-bold text-white shadow-md flex items-center gap-1.5 ${
+                  selectedLeaveAction.type === 'Approve'
+                    ? 'bg-emerald-600 hover:bg-emerald-500'
+                    : 'bg-rose-600 hover:bg-rose-500'
+                }`}
+              >
+                <span>Confirm {selectedLeaveAction.type}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* User Management Table Section */}
       <div className={`border rounded-[2rem] overflow-hidden shadow-2xs ${
         isDark ? 'border-zinc-800 bg-zinc-900 text-white' : 'border-zinc-200 bg-white text-zinc-900 shadow-sm shadow-zinc-200/50'
@@ -376,7 +688,16 @@ export const AdminPortalView: React.FC<AdminPortalViewProps> = ({
               Manage student and instructor credentials.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              onClick={handleExportCSV}
+              className="px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-mono text-xs font-bold transition-all flex items-center gap-1.5 shadow-xs"
+              title="Export user & student data to CSV file"
+            >
+              <span className="material-symbols-outlined text-base">download</span>
+              <span>Export CSV</span>
+            </button>
+
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}

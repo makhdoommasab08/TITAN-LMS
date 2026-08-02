@@ -80,7 +80,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {collapsed ? (
             <TitanLogo size="sm" variant="icon" theme={theme} />
           ) : (
-            <TitanLogo size="md" variant="horizontal" theme={theme} />
+            <TitanLogo size="md" variant="sidebar" theme={theme} />
           )}
 
           <div className="flex items-center gap-1">
@@ -245,7 +245,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               }`}>
                 <div className="flex justify-between items-start mb-2">
                   <span className="text-[10px] font-bold text-amber-500 tracking-widest uppercase font-mono">
-                    TITAN NETWORK
+                    TITAN ACADEMICS
                   </span>
                   <span className="text-xs text-amber-400">✦</span>
                 </div>

@@ -2,7 +2,7 @@ import React from 'react';
 
 interface TitanLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'full' | 'icon' | 'horizontal';
+  variant?: 'full' | 'icon' | 'horizontal' | 'sidebar';
   theme?: 'dark' | 'light';
   className?: string;
 }
@@ -156,18 +156,18 @@ export const TitanLogo: React.FC<TitanLogoProps> = ({
         strokeWidth="1.5"
       />
 
-      {/* Ribbon Text: TITAN NETWORK */}
+      {/* Ribbon Text: TITAN */}
       <text
         x="200"
         y="266"
         fill="#ffffff"
-        fontSize="20"
+        fontSize="22"
         fontWeight="900"
         fontFamily="sans-serif"
         textAnchor="middle"
-        letterSpacing="2"
+        letterSpacing="4"
       >
-        TITAN NETWORK
+        TITAN
       </text>
 
       {/* Bottom Subtext */}
@@ -202,15 +202,26 @@ export const TitanLogo: React.FC<TitanLogoProps> = ({
     return <div className={`inline-flex items-center ${className}`}>{logoSvg}</div>;
   }
 
+  if (variant === 'sidebar') {
+    return (
+      <div className={`flex flex-col items-center justify-center text-center gap-1 ${className}`}>
+        {logoSvg}
+        <span className="font-headline font-black tracking-[0.22em] text-base uppercase text-amber-500">
+          TITAN
+        </span>
+      </div>
+    );
+  }
+
   if (variant === 'full') {
     return (
       <div className={`flex flex-col items-center text-center gap-2 ${className}`}>
         {logoSvg}
-        <div className="space-y-0.5">
-          <h1 className={`font-headline font-black tracking-tight ${titleClass} ${textColor}`}>
-            TITAN NETWORK
+        <div className="space-y-1">
+          <h1 className={`font-headline font-black tracking-widest text-xl sm:text-2xl uppercase ${textColor}`}>
+            TITAN
           </h1>
-          <p className="font-mono uppercase font-bold text-[11px] tracking-wider text-amber-500">
+          <p className="font-serif uppercase font-bold text-xs sm:text-sm tracking-wider text-amber-500">
             TAJ INSTITUTE OF TECHNOLOGY & APPLIED NETWORK
           </p>
           <p className={`text-[10px] font-mono ${subTextColor}`}>
@@ -221,16 +232,13 @@ export const TitanLogo: React.FC<TitanLogoProps> = ({
     );
   }
 
-  // Horizontal variant (default for Navbar / Sidebar header)
+  // Horizontal variant (default for Navbar / Top bar header - aligned with logo)
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       {logoSvg}
-      <div className="flex flex-col">
-        <span className={`font-headline font-black tracking-tight leading-none ${titleClass} ${textColor}`}>
-          TITAN NETWORK
-        </span>
-        <span className="font-mono text-[10px] uppercase font-bold tracking-wider text-amber-500 leading-tight mt-1">
-          TAJ INSTITUTE OF TECH & APPLIED NETWORK
+      <div className="flex flex-col justify-center">
+        <span className="font-serif uppercase font-bold text-xs sm:text-sm tracking-wider text-amber-500 leading-tight">
+          Taj Institute of Technology & Applied Network
         </span>
       </div>
     </div>

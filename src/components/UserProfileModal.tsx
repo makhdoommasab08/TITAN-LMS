@@ -10,6 +10,7 @@ export interface UserProfile {
   department: string;
   joinedDate: string;
   gpa: string;
+  isNewStudent?: boolean;
 }
 
 interface UserProfileModalProps {

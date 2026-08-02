@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { Role, Course, GradingQueueItem, UserItem, Deadline, CourseResource, Quiz, QuizAttempt, Assignment, AssignmentSubmission } from './types';
+import { Role, Course, GradingQueueItem, UserItem, Deadline, CourseResource, Quiz, QuizAttempt, Assignment, AssignmentSubmission, LeaveRequest } from './types';
 import {
   INITIAL_COURSES,
   INITIAL_ACTIVITIES,
@@ -151,8 +151,170 @@ export default function App() {
   const [activities] = useState(INITIAL_ACTIVITIES);
   const [deadlines, setDeadlines] = useState<Deadline[]>(INITIAL_DEADLINES);
   const [gradingQueue, setGradingQueue] = useState<GradingQueueItem[]>(INITIAL_GRADING_QUEUE);
-  const [users, setUsers] = useState<UserItem[]>(INITIAL_USERS);
+  const [users, setUsers] = useState<UserItem[]>(() => {
+    const saved = localStorage.getItem('titan_users');
+    return saved ? JSON.parse(saved) : INITIAL_USERS;
+  });
   const [metrics] = useState(INITIAL_METRICS);
+
+  const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>(() => {
+    const saved = localStorage.getItem('titan_leave_requests');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return [
+      {
+        id: 'leave-101',
+        studentId: 'TITAN-2026-889123',
+        studentName: 'Alex Rivers',
+        studentEmail: 'alex@titan.edu',
+        course: 'CS101 • Advanced AI',
+        startDate: '2026-08-10',
+        endDate: '2026-08-12',
+        reasonCategory: 'Medical',
+        reasonDetails: 'Scheduled dental procedure requiring 2 days of home rest.',
+        status: 'Pending',
+        submittedAt: '2026-08-01 09:30 AM'
+      }
+    ];
+  });
+
+  const handleApplyLeave = (req: Omit<LeaveRequest, 'id' | 'status' | 'submittedAt'>) => {
+    const newReq: LeaveRequest = {
+      ...req,
+      id: `leave-${Date.now()}`,
+      status: 'Pending',
+      submittedAt: new Date().toLocaleString('en-US', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    };
+    const updated = [newReq, ...leaveRequests];
+    setLeaveRequests(updated);
+    localStorage.setItem('titan_leave_requests', JSON.stringify(updated));
+    showToast('Leave Request Dispatched!', `Absence application sent to Admin Portal for review.`);
+  };
+
+  const handleApproveLeave = (id: string, comment?: string) => {
+    const updated = leaveRequests.map(r => {
+      if (r.id === id) {
+        return {
+          ...r,
+          status: 'Approved' as const,
+          reviewComment: comment || 'Approved by Academic Admin Board',
+          reviewedBy: 'Academic Admin Board',
+          reviewedAt: new Date().toLocaleString()
+        };
+      }
+      return r;
+    });
+    setLeaveRequests(updated);
+    localStorage.setItem('titan_leave_requests', JSON.stringify(updated));
+    showToast('Leave Approved!', `Request ${id} status updated to Approved.`);
+  };
+
+  const handleRejectLeave = (id: string, comment?: string) => {
+    const updated = leaveRequests.map(r => {
+      if (r.id === id) {
+        return {
+          ...r,
+          status: 'Rejected' as const,
+          reviewComment: comment || 'Rejected due to administrative policy.',
+          reviewedBy: 'Academic Admin Board',
+          reviewedAt: new Date().toLocaleString()
+        };
+      }
+      return r;
+    });
+    setLeaveRequests(updated);
+    localStorage.setItem('titan_leave_requests', JSON.stringify(updated));
+    showToast('Leave Application Rejected', `Request ${id} status updated to Rejected.`);
+  };
+
+
+  const [enrolledCourseIds, setEnrolledCourseIds] = useState<string[]>(() => {
+    const savedProfile = localStorage.getItem('titan_user_profile');
+    if (savedProfile) {
+      try {
+        const parsed = JSON.parse(savedProfile);
+        const savedEnrolled = localStorage.getItem(`titan_enrolled_${parsed.studentId}`);
+        if (savedEnrolled) return JSON.parse(savedEnrolled);
+        if (parsed.isNewStudent) return [];
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return ['course-ds101', 'course-uiux', 'course-webdev', 'course-reactnative'];
+  });
+
+  const handleEnrollCourse = (courseId: string) => {
+    if (enrolledCourseIds.includes(courseId)) {
+      showToast('Already Enrolled', 'You are already enrolled in this course.');
+      return;
+    }
+    const updated = [...enrolledCourseIds, courseId];
+    setEnrolledCourseIds(updated);
+    if (userProfile?.studentId) {
+      localStorage.setItem(`titan_enrolled_${userProfile.studentId}`, JSON.stringify(updated));
+    }
+    setCourses(prev => prev.map(c => {
+      if (c.id === courseId) {
+        return {
+          ...c,
+          progress: 0,
+          completedLessons: 0,
+        };
+      }
+      return c;
+    }));
+
+    const courseObj = courses.find(c => c.id === courseId);
+    showToast('Enrolled in Course!', `Successfully enrolled in ${courseObj?.title || 'Program'}. It is now live on your dashboard.`);
+  };
+
+  const handleRegisterStudent = (userDetails: { name: string; email: string; id: string; avatar?: string; isNewStudent?: boolean }) => {
+    const newProfile: UserProfile = {
+      name: userDetails.name,
+      email: userDetails.email,
+      avatar: userDetails.avatar || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY2OfwmS2bIeSMUT_DnrlEfRIDAARXIsxGtcwuXbmeWA&s=10',
+      bio: `Enrolled student at Taj Institute of Technology & Applied Networks (${userDetails.id}).`,
+      studentId: userDetails.id,
+      department: 'Department of Computer Science & Artificial Intelligence',
+      joinedDate: 'Spring 2026 (New Student)',
+      gpa: '0.00',
+      isNewStudent: true,
+    };
+
+    setUserProfile(newProfile);
+    localStorage.setItem('titan_user_profile', JSON.stringify(newProfile));
+
+    setEnrolledCourseIds([]);
+    localStorage.setItem(`titan_enrolled_${userDetails.id}`, JSON.stringify([]));
+
+    localStorage.setItem(`titan_attendance_${userDetails.id}`, JSON.stringify({ attendedCount: 0, totalCount: 0, logs: [] }));
+
+    const newUserItem: UserItem = {
+      id: `u-${Date.now()}`,
+      name: userDetails.name,
+      email: userDetails.email,
+      avatar: newProfile.avatar,
+      role: 'STUDENT',
+      status: 'Active',
+      joinedDate: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+      performanceLabel: 'GPA',
+      performancePercent: 0
+    };
+
+    setUsers((prev) => {
+      const updated = [newUserItem, ...prev];
+      localStorage.setItem('titan_users', JSON.stringify(updated));
+      return updated;
+    });
+
+    handleLogin('student', userDetails);
+    showToast('Fresh Student Portal Initialized!', `Welcome ${userDetails.name}! Please explore and enroll in courses to populate your dashboard.`);
+  };
   const [streakDays] = useState(5);
 
   const [quizzes, setQuizzes] = useState<Quiz[]>(() => {
@@ -433,8 +595,9 @@ export default function App() {
     showToast(`Added Event: ${title}`, `Due: ${dueDate}`);
   };
 
-  // Filter Courses by search query
-  const filteredCourses = courses.filter((c) =>
+  // Filter Courses by search query & student enrollments
+  const userEnrolledCourses = courses.filter((c) => enrolledCourseIds.includes(c.id));
+  const filteredCourses = (role === 'student' ? userEnrolledCourses : courses).filter((c) =>
     c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     c.instructor.toLowerCase().includes(searchQuery.toLowerCase()) ||
     c.category.toLowerCase().includes(searchQuery.toLowerCase())
@@ -451,6 +614,7 @@ export default function App() {
         {isDark && <BackgroundShader />}
         <AuthScreen
           onLogin={handleLogin}
+          onRegisterStudent={handleRegisterStudent}
           theme={theme}
           onToggleTheme={toggleTheme}
         />
@@ -522,9 +686,11 @@ export default function App() {
             {role === 'student' && activeTab === 'dashboard' && (
               <StudentDashboardView
                 courses={filteredCourses}
+                allAvailableCourses={courses}
                 activities={activities}
                 deadlines={deadlines}
                 onCourseClick={(course) => setSelectedCourse(course)}
+                onEnrollCourse={handleEnrollCourse}
                 onOpenAnalytics={() => setIsAnalyticsOpen(true)}
                 onOpenCalendar={() => setIsCalendarOpen(true)}
                 streakDays={streakDays}
@@ -673,7 +839,13 @@ export default function App() {
             )}
 
             {role === 'student' && activeTab === 'attendance' && (
-              <StudentAttendanceView theme={theme} onShowToast={showToast} />
+              <StudentAttendanceView
+                theme={theme}
+                onShowToast={showToast}
+                userProfile={userProfile}
+                leaveRequests={leaveRequests}
+                onApplyLeave={handleApplyLeave}
+              />
             )}
 
             {role === 'student' && activeTab === 'resources' && (
@@ -845,6 +1017,9 @@ export default function App() {
                 onBroadcastAnnouncement={() => setActionModalType('announcement')}
                 onUserAction={handleUserAction}
                 theme={theme}
+                leaveRequests={leaveRequests}
+                onApproveLeave={handleApproveLeave}
+                onRejectLeave={handleRejectLeave}
               />
             )}
               </motion.div>

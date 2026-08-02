@@ -5,9 +5,11 @@ import { TitanLogo } from './TitanLogo';
 
 interface StudentDashboardViewProps {
   courses: Course[];
+  allAvailableCourses?: Course[];
   activities: RecentActivity[];
   deadlines: Deadline[];
   onCourseClick: (course: Course) => void;
+  onEnrollCourse?: (courseId: string) => void;
   onOpenAnalytics: () => void;
   onOpenCalendar: () => void;
   streakDays: number;
@@ -21,9 +23,11 @@ interface StudentDashboardViewProps {
 
 export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
   courses,
+  allAvailableCourses = [],
   activities,
   deadlines,
   onCourseClick,
+  onEnrollCourse,
   onOpenAnalytics,
   onOpenCalendar,
   streakDays,
@@ -36,21 +40,9 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
 }) => {
   const isDark = theme === 'dark';
 
-  const fallbackCourse: Course = {
-    id: 'course-ds101',
-    title: 'Data Science & Machine Learning 101',
-    category: 'Data Science',
-    instructor: 'Dr. Muhammad Hayn',
-    progress: 65,
-    completedLessons: 13,
-    totalLessons: 20,
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnERZySMw-RuOuYSYYDRjvOOk5IPOuUoLzmaVt-sb1qA&s=10',
-    currentLessonTitle: 'Module 4: Linear Regression Equations',
-    description: 'Learn fundamental data science concepts, statistical modeling, and Python tools.',
-  };
-
-  const nextLessonCourse = courses.find((c) => c.id === 'course-ds101') || courses[0] || fallbackCourse;
-  const userName = userProfile?.name?.split(' ')[0] || 'Alex';
+  const hasEnrolledCourses = courses.length > 0;
+  const nextLessonCourse = courses[0];
+  const userName = userProfile?.name?.split(' ')[0] || 'Student';
 
   return (
     <div className={`max-w-[1280px] mx-auto px-4 sm:px-8 py-8 space-y-8 min-h-screen transition-colors duration-300 ${
@@ -161,44 +153,73 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
             <div className={`isometric-card h-full border p-6 rounded-[2rem] shadow-sm hover:shadow-lg flex flex-col justify-between transition-colors duration-300 ${
               isDark ? 'bg-zinc-900 border-zinc-800 text-white' : 'bg-white border-zinc-200 text-zinc-900'
             }`}>
-              <div>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="px-3 py-1 bg-indigo-600 text-white rounded-full text-[10px] font-bold tracking-widest uppercase inline-block font-mono">
-                    Next Lesson
-                  </span>
-                  <span className="text-xs text-zinc-500 font-mono">25:00</span>
-                </div>
-                <h3 className="font-headline text-xl font-bold mb-1">
-                  {nextLessonCourse.title}
-                </h3>
-                <p className={`text-xs font-body ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-                  {nextLessonCourse.currentLessonTitle || 'Module 4: Linear Regression'}
-                </p>
-              </div>
+              {hasEnrolledCourses ? (
+                <>
+                  <div>
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="px-3 py-1 bg-indigo-600 text-white rounded-full text-[10px] font-bold tracking-widest uppercase inline-block font-mono">
+                        Next Lesson
+                      </span>
+                      <span className="text-xs text-zinc-500 font-mono">25:00</span>
+                    </div>
+                    <h3 className="font-headline text-xl font-bold mb-1">
+                      {nextLessonCourse.title}
+                    </h3>
+                    <p className={`text-xs font-body ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+                      {nextLessonCourse.currentLessonTitle || 'Module 1: Introduction'}
+                    </p>
+                  </div>
 
-              <div className="mt-8">
-                <div className="flex justify-between items-end mb-2">
-                  <span className="font-mono text-xs text-indigo-500 font-bold">
-                    {nextLessonCourse.progress}% Progress
-                  </span>
-                  <span className="text-[11px] text-zinc-500 font-mono">
-                    {nextLessonCourse.completedLessons}/{nextLessonCourse.totalLessons} Lessons
-                  </span>
+                  <div className="mt-8">
+                    <div className="flex justify-between items-end mb-2">
+                      <span className="font-mono text-xs text-indigo-500 font-bold">
+                        {nextLessonCourse.progress}% Progress
+                      </span>
+                      <span className="text-[11px] text-zinc-500 font-mono">
+                        {nextLessonCourse.completedLessons}/{nextLessonCourse.totalLessons} Lessons
+                      </span>
+                    </div>
+                    <div className={`h-2 w-full rounded-full overflow-hidden ${isDark ? 'bg-zinc-800' : 'bg-slate-200'}`}>
+                      <div
+                        className="h-full bg-indigo-500 rounded-full transition-all duration-500"
+                        style={{ width: `${nextLessonCourse.progress}%` }}
+                      />
+                    </div>
+                    <button
+                      onClick={() => onCourseClick(nextLessonCourse)}
+                      className="w-full mt-6 bg-indigo-600 text-white py-3 rounded-full font-bold text-xs hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2 shadow-sm"
+                    >
+                      Continue Learning
+                      <span className="material-symbols-outlined text-base">play_circle</span>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="h-full flex flex-col justify-between space-y-4">
+                  <div>
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="px-3 py-1 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full text-[10px] font-bold tracking-widest uppercase inline-block font-mono">
+                        Fresh Student Account
+                      </span>
+                    </div>
+                    <h3 className="font-headline text-xl font-bold mb-2">
+                      No Active Courses
+                    </h3>
+                    <p className={`text-xs font-body leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+                      Welcome to your fresh student portal! Choose courses from the catalog below to start your degree path.
+                    </p>
+                  </div>
+                  <div className="pt-2">
+                    <a
+                      href="#course-catalog-section"
+                      className="w-full bg-indigo-600 text-white py-3 rounded-full font-bold text-xs hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2 shadow-sm font-mono"
+                    >
+                      Explore Academic Catalog
+                      <span className="material-symbols-outlined text-base">arrow_downward</span>
+                    </a>
+                  </div>
                 </div>
-                <div className={`h-2 w-full rounded-full overflow-hidden ${isDark ? 'bg-zinc-800' : 'bg-slate-200'}`}>
-                  <div
-                    className="h-full bg-indigo-500 rounded-full transition-all duration-500"
-                    style={{ width: `${nextLessonCourse.progress}%` }}
-                  />
-                </div>
-                <button
-                  onClick={() => onCourseClick(nextLessonCourse)}
-                  className="w-full mt-6 bg-indigo-600 text-white py-3 rounded-full font-bold text-xs hover:bg-indigo-500 transition-colors flex items-center justify-center gap-2 shadow-sm"
-                >
-                  Continue Learning
-                  <span className="material-symbols-outlined text-base">play_circle</span>
-                </button>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -215,27 +236,23 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
                 <span className={`font-mono text-xs uppercase tracking-widest font-bold ${
                   isDark ? 'text-zinc-400' : 'text-zinc-600'
                 }`}>
-                  TITAN Enrolled Programs
+                  {hasEnrolledCourses ? 'TITAN Enrolled Programs' : 'My Enrolled Courses (0)'}
                 </span>
                 <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"></span>
               </div>
-              <button
-                onClick={() => alert('Viewing all active courses')}
-                className="text-indigo-500 font-mono text-xs font-bold hover:underline"
-              >
-                View All ↗
-              </button>
             </div>
 
             {/* Courses Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {courses.length === 0 ? (
+              {!hasEnrolledCourses ? (
                 <div className={`col-span-full p-8 text-center border rounded-[2rem] ${
-                  isDark ? 'bg-zinc-900 border-zinc-800 text-zinc-400' : 'bg-white border-zinc-200 text-zinc-600'
+                  isDark ? 'bg-zinc-900/60 border-zinc-800 text-zinc-400' : 'bg-white border-zinc-200 text-zinc-600'
                 }`}>
-                  <span className="material-symbols-outlined text-4xl mb-2 text-zinc-500">search_off</span>
-                  <p className="font-headline font-bold text-base">No courses found matching your search.</p>
-                  <p className="text-xs text-zinc-500 mt-1 font-body">Try searching for other TITAN topics.</p>
+                  <span className="material-symbols-outlined text-5xl mb-3 text-indigo-400 block">school</span>
+                  <p className="font-headline font-bold text-lg text-white">No Courses Enrolled Yet</p>
+                  <p className="text-xs text-zinc-400 mt-1 max-w-md mx-auto font-body">
+                    As a newly registered student, your portal starts clean with 0% progress and no past records. Enroll in available courses below to add them to your dashboard!
+                  </p>
                 </div>
               ) : (
                 courses.map((course, idx) => (
@@ -283,6 +300,82 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
                   </div>
                 ))
               )}
+            </div>
+          </div>
+
+          {/* Academic Course Catalog for Enrollment */}
+          <div id="course-catalog-section" className="pt-4 border-t border-zinc-800/60">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <span className="px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider">
+                  Academic Degree Path
+                </span>
+                <h3 className="font-headline font-bold text-2xl text-white mt-1">Available University Courses</h3>
+                <p className="text-xs text-zinc-400 font-body">Select courses to enroll into your student profile database.</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {allAvailableCourses.map((ac) => {
+                const isEnrolled = courses.some(c => c.id === ac.id);
+                return (
+                  <div
+                    key={ac.id}
+                    className={`border p-6 rounded-[2rem] transition-all relative flex flex-col justify-between ${
+                      isDark ? 'bg-zinc-900/90 border-zinc-800 text-white' : 'bg-white border-zinc-200 text-zinc-900 shadow-sm'
+                    }`}
+                  >
+                    <div>
+                      <div
+                        className="w-full h-32 rounded-2xl bg-cover bg-center mb-4 border border-zinc-800"
+                        style={{ backgroundImage: `url(${ac.image})` }}
+                      />
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-[10px] font-mono font-bold text-indigo-400 uppercase tracking-widest">
+                          {ac.category}
+                        </span>
+                        <span className="text-[10px] font-mono text-zinc-400">
+                          {ac.totalLessons} Lessons
+                        </span>
+                      </div>
+                      <h4 className="font-bold text-lg mb-1 font-headline">
+                        {ac.title}
+                      </h4>
+                      <p className="text-xs text-zinc-400 mb-3 font-body leading-relaxed">
+                        {ac.description}
+                      </p>
+                      <p className="text-[11px] font-mono text-zinc-500 mb-4">
+                        Instructor: <strong className="text-zinc-300">{ac.instructor}</strong>
+                      </p>
+                    </div>
+
+                    <div>
+                      {isEnrolled ? (
+                        <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30">
+                          <span className="text-xs font-mono font-bold text-emerald-400 flex items-center gap-1.5">
+                            <span className="material-symbols-outlined text-base">check_circle</span>
+                            Enrolled in Portal
+                          </span>
+                          <button
+                            onClick={() => onCourseClick(ac)}
+                            className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-mono font-bold transition-all"
+                          >
+                            Open Course
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => onEnrollCourse && onEnrollCourse(ac.id)}
+                          className="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white py-3 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2 font-mono shadow-md active:scale-98"
+                        >
+                          <span className="material-symbols-outlined text-base">add_circle</span>
+                          Enroll in Course ✦
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 

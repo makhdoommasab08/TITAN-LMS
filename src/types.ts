@@ -187,3 +187,21 @@ export interface SystemMetrics {
   totalStudents: number;
   activeCourses: number;
 }
+
+export interface LeaveRequest {
+  id: string;
+  studentId: string;
+  studentName: string;
+  studentEmail: string;
+  studentAvatar?: string;
+  course: string;
+  startDate: string;
+  endDate: string;
+  reasonCategory: 'Medical' | 'Personal' | 'Academic' | 'Emergency';
+  reasonDetails: string;
+  status: 'Pending' | 'Approved' | 'Rejected';
+  submittedAt: string;
+  reviewedBy?: string;
+  reviewComment?: string;
+  reviewedAt?: string;
+}

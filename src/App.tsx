@@ -32,6 +32,7 @@ import { ToastAlert } from './components/ToastAlert';
 import { StudyPlannerView } from './components/StudyPlannerView';
 import { TeacherQuizzesView } from './components/TeacherQuizzesView';
 import { StudentQuizzesView } from './components/StudentQuizzesView';
+import { StudentIDCardModal } from './components/StudentIDCardModal';
 import { SettingsModal } from './components/SettingsModal';
 import { NotificationsPanel } from './components/NotificationsPanel';
 import { StudentAssignmentsView } from './components/StudentAssignmentsView';
@@ -453,6 +454,7 @@ export default function App() {
   >(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [showIdCard, setShowIdCard] = useState(false);
   const [isCertificatesOpen, setIsCertificatesOpen] = useState(false);
 
   // Toast Alert State
@@ -1066,7 +1068,19 @@ export default function App() {
         onSaveProfile={handleSaveProfile}
         theme={theme}
         onOpenCertificates={() => setIsCertificatesOpen(true)}
+        onOpenIdCard={() => setShowIdCard(true)}
       />
+      
+      {showIdCard && (
+        <StudentIDCardModal
+          studentName={userProfile.name}
+          studentId={userProfile.studentId}
+          studentEmail={userProfile.email}
+          studentAvatar={userProfile.avatar}
+          theme={theme}
+          onClose={() => setShowIdCard(false)}
+        />
+      )}
 
       <CertificatesModal
         isOpen={isCertificatesOpen}

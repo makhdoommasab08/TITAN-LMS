@@ -178,7 +178,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
              playsInline
              className="w-full h-full object-cover opacity-60"
            >
-             <source src="VID_20260815_221826_1.mp4" type="video/mp4" />
+             <source src="https://ak.picdn.net/shutterstock/videos/1027162622/preview/stock-footage-abstract-digital-data-processing-on-screen-background-loop-technology-cyber-security-hacker.mp4" type="video/mp4" />
            </video>
            <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/60 via-zinc-950/40 to-indigo-950/60 mix-blend-multiply" />
            {/* Ripple Effect */}

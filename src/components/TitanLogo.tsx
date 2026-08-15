@@ -33,7 +33,7 @@ export const TitanLogo: React.FC<TitanLogoProps> = ({
 
   const logoSvg = (
     <img
-      src="/Titan-transparent-proper.png"
+      src="/titan-logo.png"
       alt="TITAN Logo"
       style={{ width: iconSize, height: 'auto', objectFit: 'contain' }}
       className="shrink-0 drop-shadow-md transition-transform duration-300 hover:scale-105"

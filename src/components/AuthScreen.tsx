@@ -170,13 +170,17 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
       {/* Left Pane - Branding & Animations */}
       <div className="hidden lg:flex w-1/2 relative bg-zinc-950 overflow-hidden flex-col justify-center items-center">
         {/* Animated Background Overlay */}
-        <div className="absolute inset-0 z-0">
-           <img 
-             src="https://www.instagram.com/reel/DL9WC1DqwO3/?utm_source=ig_web_button_share_sheet" 
-             alt="University Campus" 
-             className="w-full h-full object-cover opacity-20"
-           />
-           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/80 via-zinc-950/80 to-indigo-950/90 mix-blend-multiply" />
+        <div className="absolute inset-0 z-0 bg-zinc-950">
+           <video 
+             autoPlay 
+             loop 
+             muted 
+             playsInline
+             className="w-full h-full object-cover opacity-40 mix-blend-luminosity"
+           >
+             <source src="/campus-video.mp4" type="video/mp4" />
+           </video>
+           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-950/90 via-zinc-950/80 to-indigo-900/80 mix-blend-multiply" />
            {/* Ripple Effect */}
            <motion.div
              initial={{ scale: 0, opacity: 0.8 }}

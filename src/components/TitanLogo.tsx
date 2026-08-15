@@ -206,7 +206,7 @@ export const TitanLogo: React.FC<TitanLogoProps> = ({
     return (
       <div className={`flex flex-col items-center justify-center text-center gap-1 ${className}`}>
         {logoSvg}
-        <span className="font-headline font-black tracking-[0.22em] text-base uppercase text-amber-500">
+        <span className="font-headline font-black tracking-[0.22em] text-base uppercase text-[#e0a328]">
           TITAN
         </span>
       </div>
@@ -221,7 +221,7 @@ export const TitanLogo: React.FC<TitanLogoProps> = ({
           <h1 className={`font-headline font-black tracking-widest text-xl sm:text-2xl uppercase ${textColor}`}>
             TITAN
           </h1>
-          <p className="font-serif uppercase font-bold text-xs sm:text-sm tracking-wider text-amber-500">
+          <p className="font-serif uppercase font-bold text-xs sm:text-sm tracking-wider text-[#e0a328]">
             TAJ INSTITUTE OF TECHNOLOGY & APPLIED NETWORK
           </p>
           <p className={`text-[10px] font-mono ${subTextColor}`}>
@@ -237,7 +237,7 @@ export const TitanLogo: React.FC<TitanLogoProps> = ({
     <div className={`flex items-center gap-3 ${className}`}>
       {logoSvg}
       <div className="flex flex-col justify-center">
-        <span className="font-serif uppercase font-bold text-xs sm:text-sm tracking-wider text-amber-500 leading-tight">
+        <span className="font-serif uppercase font-bold text-xs sm:text-sm tracking-wider text-[#e0a328] leading-tight">
           Taj Institute of Technology & Applied Network
         </span>
       </div>

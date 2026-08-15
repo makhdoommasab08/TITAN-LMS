@@ -244,10 +244,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 isDark ? 'bg-zinc-900 border-zinc-800 text-white' : 'bg-slate-100 border-zinc-300 text-zinc-900'
               }`}>
                 <div className="flex justify-between items-start mb-2">
-                  <span className="text-[10px] font-bold text-amber-500 tracking-widest uppercase font-mono">
+                  <span className="text-[10px] font-bold text-[#e0a328] tracking-widest uppercase font-mono">
                     TITAN ACADEMICS
                   </span>
-                  <span className="text-xs text-amber-400">✦</span>
+                  <span className="text-xs text-[#e0a328]">✦</span>
                 </div>
                 <p className="font-headline text-sm font-bold mb-3">Academic Excellence</p>
                 <button

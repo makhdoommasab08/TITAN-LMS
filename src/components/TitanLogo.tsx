@@ -1,5 +1,5 @@
 import React from 'react';
-import logoImage from '../assets/titan.png';
+
 
 interface TitanLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
@@ -34,7 +34,7 @@ export const TitanLogo: React.FC<TitanLogoProps> = ({
 
   const logoSvg = (
     <img
-      src={logoImage}
+      src="/titan.png"
       alt="TITAN Logo"
       style={{ width: iconSize, height: 'auto', objectFit: 'contain' }}
       className="shrink-0 drop-shadow-md transition-transform duration-300 hover:scale-105"

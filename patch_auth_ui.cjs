@@ -1,171 +1,9 @@
-import React, { useState } from 'react';
-import { Role } from '../types';
-import { TitanLogo } from './TitanLogo';
-import { motion } from 'motion/react';
+const fs = require('fs');
+let code = fs.readFileSync('src/components/AuthScreen.tsx', 'utf8');
 
-interface AuthScreenProps {
-  onLogin: (role: Role, userDetails: { name: string; email: string; id: string; avatar?: string }) => void;
-  onRegisterStudent?: (userDetails: { name: string; email: string; id: string; avatar?: string }) => void;
-  theme?: 'dark' | 'light';
-  onToggleTheme?: () => void;
-}
-
-export const AuthScreen: React.FC<AuthScreenProps> = ({
-  onLogin,
-  onRegisterStudent,
-  theme = 'dark',
-  onToggleTheme
-}) => {
-  const [mode, setMode] = useState<'signin' | 'access_code' | 'signup'>('signin');
-  const [selectedRole, setSelectedRole] = useState<Role>('student');
-
-  // Access Code State
-  const [accessCode, setAccessCode] = useState('');
-  const [accessCodeError, setAccessCodeError] = useState('');
-  const [showRegistrationGuide, setShowRegistrationGuide] = useState(true);
-
-  // Form State
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [isEmailManuallyEdited, setIsEmailManuallyEdited] = useState(false);
-  const [password, setPassword] = useState('');
-  const [idNumber, setIdNumber] = useState('');
-  const [avatarPreview, setAvatarPreview] = useState<string>('');
-
-  const isDark = theme === 'dark';
-
-  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        alert('File size exceeds 5MB limit. Please select a smaller photo.');
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setAvatarPreview(event.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Helper to generate unique student ID
-  const generateUniqueStudentId = () => {
-    return `TITAN-2026-${Math.floor(100000 + Math.random() * 900000)}`;
-  };
-
-  // Helper to generate institutional email format (@titan.edu)
-  const generateEmailFromNames = (fn: string, ln: string) => {
-    const cleanFn = fn.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-    const cleanLn = ln.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-    if (cleanFn && cleanLn) {
-      return `${cleanFn}.${cleanLn}@titan.edu`;
-    } else if (cleanFn) {
-      return `${cleanFn}@titan.edu`;
-    } else if (cleanLn) {
-      return `${cleanLn}@titan.edu`;
-    }
-    return '';
-  };
-
-  const handleFirstNameChange = (val: string) => {
-    setFirstName(val);
-    if (!isEmailManuallyEdited) {
-      setEmail(generateEmailFromNames(val, lastName));
-    }
-  };
-
-  const handleLastNameChange = (val: string) => {
-    setLastName(val);
-    if (!isEmailManuallyEdited) {
-      setEmail(generateEmailFromNames(firstName, val));
-    }
-  };
-
-  const handleVerifyAccessCode = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleanCode = accessCode.trim().toLowerCase();
-    if (cleanCode === 'titan-2026') {
-      setAccessCodeError('');
-      setIdNumber(generateUniqueStudentId());
-      setMode('signup');
-    } else {
-      setAccessCodeError('Invalid Access Code! Please enter the confidential code provided by your administrator.');
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (mode === 'signup') {
-      const fullName = `${firstName.trim()} ${lastName.trim()}`.trim() || 'Registered Student';
-      const autoEmail = generateEmailFromNames(firstName, lastName);
-      const finalEmail = email.trim() || autoEmail || 'student@titan.edu';
-      const finalId = idNumber.trim() || generateUniqueStudentId();
-      const defaultAvatar = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY2OfwmS2bIeSMUT_DnrlEfRIDAARXIsxGtcwuXbmeWA&s=10';
-      const finalAvatar = avatarPreview || defaultAvatar;
-
-      const userDetails = {
-        name: fullName,
-        email: finalEmail,
-        id: finalId,
-        avatar: finalAvatar,
-        isNewStudent: true,
-      };
-
-      if (onRegisterStudent) {
-        onRegisterStudent(userDetails);
-      } else {
-        onLogin('student', userDetails);
-      }
-      return;
-    }
-
-    // Sign In Mode
-    const finalName = `${firstName.trim()} ${lastName.trim()}`.trim() || (selectedRole === 'student' ? 'Masab Bin Abdul Rehman' : selectedRole === 'teacher' ? 'Prof. Dr. Shahnawaz Qureshi' : 'TITAN Admin');
-    const finalEmail = email.trim() || (selectedRole === 'student' ? 'masab_bin.abdul_rehman@titan.edu.pk' : selectedRole === 'teacher' ? 'shahnawaz_qureshi@titan.edu.pk' : 'admin@titan.edu.pk');
-    const finalId = idNumber.trim() || (selectedRole === 'student' ? 'TITAN-2025-468858' : selectedRole === 'teacher' ? 'FAC-TITAN-104' : 'ADM-TITAN-001');
-    const finalAvatar = selectedRole === 'student' 
-      ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY2OfwmS2bIeSMUT_DnrlEfRIDAARXIsxGtcwuXbmeWA&s=10' 
-      : selectedRole === 'teacher' 
-      ? 'https://media.licdn.com/dms/image/v2/D4D22AQEzbJzahRPz8A/feedshare-shrink_800/B4DZUbJYsZHAAo-/0/1739917201215?e=2147483647&v=beta&t=nSiXg3jfIgPm2EI5BjT09z-N7IUJxXxdiZng3vv5wuo' 
-      : '/titan-logo.svg';
-
-    onLogin(selectedRole, {
-      name: finalName,
-      email: finalEmail,
-      id: finalId,
-      avatar: finalAvatar,
-    });
-  };
-
-  const handleDemoLogin = (role: Role) => {
-    if (selectedRole === 'student') {
-      onLogin('student', {
-        name: 'Masab Bin Abdul Rehman',
-        email: 'masab_bin.abdul_rehman@titan.edu.pk',
-        id: 'TITAN-2025-468858',
-        avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY2OfwmS2bIeSMUT_DnrlEfRIDAARXIsxGtcwuXbmeWA&s=10',
-      });
-    } else if (selectedRole === 'teacher') {
-      onLogin('teacher', {
-        name: 'Prof. Dr. Shahnawaz Qureshi',
-        email: 'shahnawaz_qureshi@titan.edu.pk',
-        id: 'FAC-TITAN-104',
-        avatar: 'https://media.licdn.com/dms/image/v2/D4D22AQEzbJzahRPz8A/feedshare-shrink_800/B4DZUbJYsZHAAo-/0/1739917201215?e=2147483647&v=beta&t=nSiXg3jfIgPm2EI5BjT09z-N7IUJxXxdiZng3vv5wuo',
-      });
-    } else {
-      onLogin('admin', {
-        name: 'TITAN Admin',
-        email: 'admin@titan.edu.pk',
-        id: 'ADM-TITAN-001',
-        avatar: '/titan-logo.svg',
-      });
-    }
-  };
-
-  return (
-    <div className={`min-h-screen flex font-body ${isDark ? 'bg-[#09090b] text-white' : 'bg-slate-50 text-zinc-900'}`}>
+// We'll replace the entire return block for the AuthScreen
+const newReturn = `  return (
+    <div className={\`min-h-screen flex font-body \${isDark ? 'bg-[#09090b] text-white' : 'bg-slate-50 text-zinc-900'}\`}>
       
       {/* Left Pane - Branding & Animations */}
       <div className="hidden lg:flex w-1/2 relative bg-zinc-950 overflow-hidden flex-col justify-center items-center">
@@ -212,17 +50,17 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
       </div>
 
       {/* Right Pane - Form */}
-      <div className={`w-full lg:w-1/2 flex flex-col items-center justify-center p-8 sm:p-12 lg:p-24 overflow-y-auto relative ${
+      <div className={\`w-full lg:w-1/2 flex flex-col items-center justify-center p-8 sm:p-12 lg:p-24 overflow-y-auto relative \${
         isDark ? 'bg-[#09090b]' : 'bg-white'
-      }`}>
+      }\`}>
         {/* Theme Toggle in top right */}
         {onToggleTheme && (
           <div className="absolute top-8 right-8">
             <button
               onClick={onToggleTheme}
-              className={`p-2.5 rounded-full transition-all flex items-center justify-center border shadow-sm ${
+              className={\`p-2.5 rounded-full transition-all flex items-center justify-center border shadow-sm \${
                 isDark ? 'bg-zinc-900 border-zinc-800 text-amber-400 hover:bg-zinc-800' : 'bg-white border-zinc-200 text-indigo-600 hover:bg-slate-50'
-              }`}
+              }\`}
               title="Toggle Theme"
             >
               <span className="material-symbols-outlined text-lg">
@@ -245,7 +83,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
               {mode === 'access_code' && 'Enter Access Code'}
               {mode === 'signup' && 'Create an account'}
             </h1>
-            <p className={`text-sm ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+            <p className={\`text-sm \${isDark ? 'text-zinc-400' : 'text-zinc-500'}\`}>
               {mode === 'signin' && 'Enter your details to access your portal.'}
               {mode === 'access_code' && 'Enter the student access code to continue.'}
               {mode === 'signup' && 'Register to join the TITAN database.'}
@@ -261,42 +99,42 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
               className="w-full"
             >
               {/* Role Tabs */}
-              <div className={`p-1 rounded-xl flex gap-1 mb-8 ${isDark ? 'bg-zinc-900' : 'bg-slate-100'}`}>
+              <div className={\`p-1 rounded-xl flex gap-1 mb-8 \${isDark ? 'bg-zinc-900' : 'bg-slate-100'}\`}>
                 <button
-                  onClick={() => setSelectedRole('student')}
-                  className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
-                    selectedRole === 'student' 
+                  onClick={() => setRole('student')}
+                  className={\`flex-1 py-2 text-xs font-semibold rounded-lg transition-all \${
+                    role === 'student' 
                       ? (isDark ? 'bg-zinc-800 text-white shadow-sm' : 'bg-white text-zinc-900 shadow-sm') 
                       : (isDark ? 'text-zinc-400 hover:text-zinc-300' : 'text-zinc-500 hover:text-zinc-700')
-                  }`}
+                  }\`}
                 >
                   Student
                 </button>
                 <button
-                  onClick={() => setSelectedRole('teacher')}
-                  className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
-                    selectedRole === 'teacher' 
+                  onClick={() => setRole('teacher')}
+                  className={\`flex-1 py-2 text-xs font-semibold rounded-lg transition-all \${
+                    role === 'teacher' 
                       ? (isDark ? 'bg-zinc-800 text-white shadow-sm' : 'bg-white text-zinc-900 shadow-sm') 
                       : (isDark ? 'text-zinc-400 hover:text-zinc-300' : 'text-zinc-500 hover:text-zinc-700')
-                  }`}
+                  }\`}
                 >
                   Faculty
                 </button>
                 <button
-                  onClick={() => setSelectedRole('admin')}
-                  className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
-                    selectedRole === 'admin' 
+                  onClick={() => setRole('admin')}
+                  className={\`flex-1 py-2 text-xs font-semibold rounded-lg transition-all \${
+                    role === 'admin' 
                       ? (isDark ? 'bg-zinc-800 text-white shadow-sm' : 'bg-white text-zinc-900 shadow-sm') 
                       : (isDark ? 'text-zinc-400 hover:text-zinc-300' : 'text-zinc-500 hover:text-zinc-700')
-                  }`}
+                  }\`}
                 >
                   Admin
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleLogin} className="space-y-5">
                 <div className="space-y-1.5">
-                  <label className={`block text-xs font-semibold ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
+                  <label className={\`block text-xs font-semibold \${isDark ? 'text-zinc-300' : 'text-zinc-700'}\`}>
                     Email Address
                   </label>
                   <input
@@ -304,15 +142,15 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    className={`w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
+                    className={\`w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all \${
                       isDark ? 'bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-600 focus:bg-zinc-800' : 'bg-white border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:bg-white'
-                    }`}
+                    }\`}
                     required
                   />
                 </div>
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
-                    <label className={`block text-xs font-semibold ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
+                    <label className={\`block text-xs font-semibold \${isDark ? 'text-zinc-300' : 'text-zinc-700'}\`}>
                       Password
                     </label>
                     <a href="#" className="text-xs text-indigo-500 hover:text-indigo-600 font-medium">Forgot password?</a>
@@ -322,9 +160,9 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••••••"
-                    className={`w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
+                    className={\`w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all \${
                       isDark ? 'bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-600 focus:bg-zinc-800' : 'bg-white border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:bg-white'
-                    }`}
+                    }\`}
                     required
                   />
                 </div>
@@ -361,7 +199,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
             >
               <form onSubmit={handleVerifyAccessCode} className="space-y-5">
                 <div className="space-y-1.5">
-                  <label className={`block text-xs font-semibold ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
+                  <label className={\`block text-xs font-semibold \${isDark ? 'text-zinc-300' : 'text-zinc-700'}\`}>
                     12-Digit Access Code
                   </label>
                   <input
@@ -369,9 +207,9 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                     value={accessCode}
                     onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
                     placeholder="TITAN-XXXX-XXXX"
-                    className={`w-full px-4 py-3 rounded-xl text-sm font-mono tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
+                    className={\`w-full px-4 py-3 rounded-xl text-sm font-mono tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all \${
                       isDark ? 'bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-600 focus:bg-zinc-800' : 'bg-white border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:bg-white'
-                    }`}
+                    }\`}
                     required
                   />
                 </div>
@@ -389,7 +227,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                 <button
                   type="button"
                   onClick={() => setMode('signin')}
-                  className={`font-semibold ${isDark ? 'text-zinc-400 hover:text-zinc-300' : 'text-zinc-500 hover:text-zinc-700'}`}
+                  className={\`font-semibold \${isDark ? 'text-zinc-400 hover:text-zinc-300' : 'text-zinc-500 hover:text-zinc-700'}\`}
                 >
                   Back to Sign In
                 </button>
@@ -405,10 +243,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
               exit={{ opacity: 0, x: -20 }}
               className="w-full"
             >
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleRegister} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className={`block text-xs font-semibold ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
+                    <label className={\`block text-xs font-semibold \${isDark ? 'text-zinc-300' : 'text-zinc-700'}\`}>
                       First Name
                     </label>
                     <input
@@ -416,14 +254,14 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                       value={firstName}
                       onChange={(e) => handleFirstNameChange(e.target.value)}
                       placeholder="Jane"
-                      className={`w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
+                      className={\`w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all \${
                         isDark ? 'bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-600 focus:bg-zinc-800' : 'bg-white border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:bg-white'
-                      }`}
+                      }\`}
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className={`block text-xs font-semibold ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
+                    <label className={\`block text-xs font-semibold \${isDark ? 'text-zinc-300' : 'text-zinc-700'}\`}>
                       Last Name
                     </label>
                     <input
@@ -431,9 +269,9 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                       value={lastName}
                       onChange={(e) => handleLastNameChange(e.target.value)}
                       placeholder="Doe"
-                      className={`w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
+                      className={\`w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all \${
                         isDark ? 'bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-600 focus:bg-zinc-800' : 'bg-white border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:bg-white'
-                      }`}
+                      }\`}
                       required
                     />
                   </div>
@@ -441,7 +279,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
 
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
-                    <label className={`block text-xs font-semibold ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
+                    <label className={\`block text-xs font-semibold \${isDark ? 'text-zinc-300' : 'text-zinc-700'}\`}>
                       Email Address
                     </label>
                     <span className="text-[10px] text-indigo-500 font-medium">Auto-Generated</span>
@@ -454,15 +292,15 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                       setIsEmailManuallyEdited(true);
                     }}
                     placeholder="jane.doe@titan.edu"
-                    className={`w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
+                    className={\`w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all \${
                       isDark ? 'bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-600 focus:bg-zinc-800' : 'bg-white border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:bg-white'
-                    }`}
+                    }\`}
                     required
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className={`block text-xs font-semibold ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
+                  <label className={\`block text-xs font-semibold \${isDark ? 'text-zinc-300' : 'text-zinc-700'}\`}>
                     Password
                   </label>
                   <input
@@ -470,16 +308,16 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••••••"
-                    className={`w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
+                    className={\`w-full px-4 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all \${
                       isDark ? 'bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-600 focus:bg-zinc-800' : 'bg-white border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:bg-white'
-                    }`}
+                    }\`}
                     required
                   />
                 </div>
 
                 <div className="space-y-1.5">
                   <div className="flex justify-between items-center">
-                    <label className={`block text-xs font-semibold ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
+                    <label className={\`block text-xs font-semibold \${isDark ? 'text-zinc-300' : 'text-zinc-700'}\`}>
                       Student ID
                     </label>
                     <button
@@ -495,9 +333,9 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                     value={idNumber}
                     onChange={(e) => setIdNumber(e.target.value)}
                     placeholder="TITAN-2026-XXXXXX"
-                    className={`w-full px-4 py-3 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all ${
+                    className={\`w-full px-4 py-3 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all \${
                       isDark ? 'bg-zinc-900 border border-zinc-800 text-white placeholder-zinc-600 focus:bg-zinc-800' : 'bg-white border border-zinc-200 text-zinc-900 placeholder-zinc-400 focus:bg-white'
-                    }`}
+                    }\`}
                     required
                   />
                 </div>
@@ -514,7 +352,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                 <button
                   type="button"
                   onClick={() => setMode('signin')}
-                  className={`font-semibold ${isDark ? 'text-zinc-400 hover:text-zinc-300' : 'text-zinc-500 hover:text-zinc-700'}`}
+                  className={\`font-semibold \${isDark ? 'text-zinc-400 hover:text-zinc-300' : 'text-zinc-500 hover:text-zinc-700'}\`}
                 >
                   Back to Sign In
                 </button>
@@ -526,10 +364,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
           <div className="mt-12">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className={`w-full border-t ${isDark ? 'border-zinc-800' : 'border-zinc-200'}`}></div>
+                <div className={\`w-full border-t \${isDark ? 'border-zinc-800' : 'border-zinc-200'}\`}></div>
               </div>
               <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-widest">
-                <span className={`px-2 ${isDark ? 'bg-[#09090b] text-zinc-600' : 'bg-white text-zinc-400'}`}>
+                <span className={\`px-2 \${isDark ? 'bg-[#09090b] text-zinc-600' : 'bg-white text-zinc-400'}\`}>
                   Quick Demo Login
                 </span>
               </div>
@@ -539,27 +377,27 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
               <button
                 type="button"
                 onClick={() => handleDemoLogin('student')}
-                className={`py-2 rounded-lg text-[11px] font-semibold transition-all ${
+                className={\`py-2 rounded-lg text-[11px] font-semibold transition-all \${
                   isDark ? 'bg-zinc-900 hover:bg-zinc-800 text-emerald-400' : 'bg-slate-100 hover:bg-slate-200 text-emerald-600'
-                }`}
+                }\`}
               >
                 Student
               </button>
               <button
                 type="button"
                 onClick={() => handleDemoLogin('teacher')}
-                className={`py-2 rounded-lg text-[11px] font-semibold transition-all ${
+                className={\`py-2 rounded-lg text-[11px] font-semibold transition-all \${
                   isDark ? 'bg-zinc-900 hover:bg-zinc-800 text-indigo-400' : 'bg-slate-100 hover:bg-slate-200 text-indigo-600'
-                }`}
+                }\`}
               >
                 Faculty
               </button>
               <button
                 type="button"
                 onClick={() => handleDemoLogin('admin')}
-                className={`py-2 rounded-lg text-[11px] font-semibold transition-all ${
+                className={\`py-2 rounded-lg text-[11px] font-semibold transition-all \${
                   isDark ? 'bg-zinc-900 hover:bg-zinc-800 text-amber-400' : 'bg-slate-100 hover:bg-slate-200 text-amber-600'
-                }`}
+                }\`}
               >
                 Admin
               </button>
@@ -568,5 +406,14 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  );`;
+
+// Find where `return (` is and replace everything after it.
+const startIndex = code.indexOf('  return (');
+if (startIndex !== -1) {
+  code = code.substring(0, startIndex) + newReturn + '\n};\n';
+  fs.writeFileSync('src/components/AuthScreen.tsx', code);
+  console.log('Auth UI successfully upgraded!');
+} else {
+  console.error('Could not find return statement.');
+}

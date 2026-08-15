@@ -122,14 +122,14 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
     }
 
     // Sign In Mode
-    const finalName = `${firstName.trim()} ${lastName.trim()}`.trim() || (selectedRole === 'student' ? 'Masab Bin Abdul Rehman' : selectedRole === 'teacher' ? 'Prof. Dr. Shahnawaz Qureshi' : 'Lionel Messi');
+    const finalName = `${firstName.trim()} ${lastName.trim()}`.trim() || (selectedRole === 'student' ? 'Masab Bin Abdul Rehman' : selectedRole === 'teacher' ? 'Prof. Dr. Shahnawaz Qureshi' : 'TITAN Admin');
     const finalEmail = email.trim() || (selectedRole === 'student' ? 'masab_bin.abdul_rehman@titan.edu.pk' : selectedRole === 'teacher' ? 'shahnawaz_qureshi@titan.edu.pk' : 'admin@titan.edu.pk');
     const finalId = idNumber.trim() || (selectedRole === 'student' ? 'TITAN-2025-468858' : selectedRole === 'teacher' ? 'FAC-TITAN-104' : 'ADM-TITAN-001');
     const finalAvatar = selectedRole === 'student' 
       ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY2OfwmS2bIeSMUT_DnrlEfRIDAARXIsxGtcwuXbmeWA&s=10' 
       : selectedRole === 'teacher' 
       ? 'https://media.licdn.com/dms/image/v2/D4D22AQEzbJzahRPz8A/feedshare-shrink_800/B4DZUbJYsZHAAo-/0/1739917201215?e=2147483647&v=beta&t=nSiXg3jfIgPm2EI5BjT09z-N7IUJxXxdiZng3vv5wuo' 
-      : 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Lionel-Messi-Argentina-2022-FIFA-World-Cup_%28cropped%29.jpg';
+      : '/titan-logo.svg';
 
     onLogin(selectedRole, {
       name: finalName,
@@ -156,10 +156,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
       });
     } else {
       onLogin('admin', {
-        name: 'Lionel Messi',
-        email: 'lionel.messi@titan.edu.pk',
-        id: 'ADM-GOAT-10',
-        avatar: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/Lionel-Messi-Argentina-2022-FIFA-World-Cup_%28cropped%29.jpg',
+        name: 'TITAN Admin',
+        email: 'admin@titan.edu.pk',
+        id: 'ADM-TITAN-001',
+        avatar: '/titan-logo.svg',
       });
     }
   };

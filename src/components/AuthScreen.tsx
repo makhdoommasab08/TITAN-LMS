@@ -169,14 +169,18 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
       
       {/* Left Pane - Branding & Animations */}
       <div className="hidden lg:flex w-1/2 relative bg-zinc-950 overflow-hidden flex-col justify-center items-center">
-        {/* Animated Background Overlay */}
+        {/* Animated Video Background Overlay */}
         <div className="absolute inset-0 z-0">
-           <img 
-             src="https://www.instagram.com/reel/DL9WC1DqwO3/?utm_source=ig_web_button_share_sheet" 
-             alt="University Campus" 
-             className="w-full h-full object-cover opacity-20"
-           />
-           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/80 via-zinc-950/80 to-indigo-950/90 mix-blend-multiply" />
+           <video 
+             autoPlay 
+             loop 
+             muted 
+             playsInline
+             className="w-full h-full object-cover opacity-60"
+           >
+             <source src="/VID_20260815_221826_1.mp4" type="video/mp4" />
+           </video>
+           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/60 via-zinc-950/40 to-indigo-950/60 mix-blend-multiply" />
            {/* Ripple Effect */}
            <motion.div
              initial={{ scale: 0, opacity: 0.8 }}
@@ -190,16 +194,16 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
         <motion.div
           animate={{ y: [0, -20, 0], opacity: [0.5, 0.8, 0.5] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 left-1/4 w-64 h-64 bg-indigo-600/20 rounded-full blur-3xl z-0"
+          className="absolute top-1/4 left-1/4 w-64 h-64 bg-indigo-600/30 rounded-full blur-3xl z-0 pointer-events-none"
         />
         <motion.div
           animate={{ y: [0, 30, 0], opacity: [0.3, 0.6, 0.3] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl z-0"
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-600/20 rounded-full blur-3xl z-0 pointer-events-none"
         />
 
-        {/* Content */}
-        <div className="relative z-10 p-12 text-center max-w-xl flex flex-col items-center">
+        {/* Content with Glassmorphism */}
+        <div className="relative z-10 p-12 text-center w-full max-w-2xl flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.5, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -211,10 +215,12 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
             }}
             className="mb-10 relative drop-shadow-2xl"
           >
-             {/* Sleek modern glow behind the logo */}
-             <div className="absolute inset-0 bg-indigo-500/20 blur-[80px] rounded-full scale-[2]" />
-             <div className="relative z-10">
-               <TitanLogo size="xl" variant="full" theme="dark" />
+             {/* Logo Container */}
+             <div className="relative flex justify-center items-center">
+               <div className="absolute inset-0 bg-indigo-500/20 blur-[80px] rounded-full scale-[2]" />
+               <div className="relative z-10">
+                 <TitanLogo size="xl" variant="full" theme="dark" />
+               </div>
              </div>
           </motion.div>
           

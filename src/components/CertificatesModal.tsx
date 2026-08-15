@@ -355,7 +355,7 @@ export const CertificatesModal: React.FC<CertificatesModalProps> = ({
               <!-- Top Left Brand Header -->
               <div class="top-left-brand">
                 <div class="brand-header-flex">
-                  <img src="/Titan.png.png" alt="TITAN Logo" style="width: 42px; height: 44px; object-fit: contain;" />
+                  <img src="/Titan-transparent-proper.png" alt="TITAN Logo" style="width: 42px; height: 44px; object-fit: contain;" />
 
                   <div class="brand-titles">
                     <div class="brand-logo-text">titan</div>
@@ -514,7 +514,7 @@ export const CertificatesModal: React.FC<CertificatesModalProps> = ({
               <div className="flex flex-col items-start z-10">
                 <div className="flex items-center gap-3 mb-1">
                   {/* TITAN Emblem Logo */}
-                  <img src="/Titan.png.png" alt="TITAN Logo" style={{ width: 40, height: 42, objectFit: 'contain' }} className="shrink-0" />
+                  <img src="/Titan-transparent-proper.png" alt="TITAN Logo" style={{ width: 40, height: 42, objectFit: 'contain' }} className="shrink-0" />
 
                   <div>
                     <div className="font-sans font-extrabold text-2xl sm:text-3xl text-[#0056D2] tracking-tighter leading-none">

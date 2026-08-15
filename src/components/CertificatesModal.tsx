@@ -355,7 +355,52 @@ export const CertificatesModal: React.FC<CertificatesModalProps> = ({
               <!-- Top Left Brand Header -->
               <div class="top-left-brand">
                 <div class="brand-header-flex">
-                  <img src="/Titan-transparent-proper.png" alt="TITAN Logo" style="width: 42px; height: 44px; object-fit: contain;" />
+                  <svg width="42" height="44" viewBox="0 0 400 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g fill="#e0a328">
+                      <path d="M 120 220 C 80 190, 75 140, 95 90 C 70 120, 65 170, 105 210 Z" />
+                      <path d="M 100 200 C 60 170, 60 120, 85 70 C 55 100, 55 150, 85 190 Z" />
+                      <path d="M 85 175 C 45 145, 50 95, 80 50 C 45 80, 45 130, 70 165 Z" />
+                      <path d="M 102 240 C 70 230, 60 210, 80 200 C 95 210, 100 230, 102 240 Z" />
+                      <path d="M 82 215 C 50 200, 45 180, 65 172 C 80 182, 82 205, 82 215 Z" />
+                      <path d="M 68 185 C 38 168, 35 148, 55 140 C 70 152, 70 175, 68 185 Z" />
+                      <path d="M 60 150 C 30 130, 30 110, 50 102 C 65 115, 62 140, 60 150 Z" />
+                      <path d="M 62 115 C 35 92, 40 70, 58 68 C 70 82, 65 105, 62 115 Z" />
+                      <path d="M 72 80 C 50 55, 60 38, 75 40 C 85 55, 78 72, 72 80 Z" />
+                      <path d="M 90 52 C 72 28, 88 15, 100 22 C 105 38, 95 50, 90 52 Z" />
+                      <path d="M 280 220 C 320 190, 325 140, 305 90 C 330 120, 335 170, 295 210 Z" />
+                      <path d="M 300 200 C 340 170, 340 120, 315 70 C 345 100, 345 150, 315 190 Z" />
+                      <path d="M 315 175 C 355 145, 350 95, 320 50 C 355 80, 355 130, 330 165 Z" />
+                      <path d="M 298 240 C 330 230, 340 210, 320 200 C 305 210, 300 230, 298 240 Z" />
+                      <path d="M 318 215 C 350 200, 355 180, 335 172 C 320 182, 318 205, 318 215 Z" />
+                      <path d="M 332 185 C 362 168, 365 148, 345 140 C 330 152, 330 175, 332 185 Z" />
+                      <path d="M 340 150 C 370 130, 370 110, 350 102 C 335 115, 338 140, 340 150 Z" />
+                      <path d="M 338 115 C 365 92, 360 70, 342 68 C 330 82, 335 105, 338 115 Z" />
+                      <path d="M 328 80 C 350 55, 340 38, 325 40 C 315 55, 322 72, 328 80 Z" />
+                      <path d="M 310 52 C 328 28, 312 15, 300 22 C 295 38, 305 50, 310 52 Z" />
+                    </g>
+                    <path d="M 110 55 C 160 70, 240 70, 290 55 L 298 140 C 298 210, 200 250, 200 250 C 200 250, 102 210, 102 140 Z" fill="#f2b438" stroke="#df9b27" stroke-width="3" />
+                    <path d="M 116 62 C 160 75, 240 75, 284 62 L 291 138 C 291 202, 200 239, 200 239 C 200 239, 109 202, 109 138 Z" fill="#ffffff" />
+                    <path d="M 120 66 C 160 78, 240 78, 280 66 L 286 136 C 286 196, 200 232, 200 232 C 200 232, 114 196, 114 136 Z" fill="#0056D2" />
+                    <text x="200" y="88" fill="#ffffff" font-size="13" font-weight="800" font-family="sans-serif" text-anchor="middle" letter-spacing="2.5">ESTD, 2025</text>
+                    <rect x="114" y="102" width="172" height="36" fill="#ffffff" />
+                    <text x="200" y="130" fill="#0056D2" font-size="32" font-weight="900" font-family="sans-serif" text-anchor="middle" letter-spacing="5">TITAN</text>
+                    <g transform="translate(200, 172)">
+                      <path d="M -36 -16 Q -18 -22, 0 -12 Q 18 -22, 36 -16 L 36 12 Q 18 6, 0 16 Q -18 6, -36 12 Z" fill="#ffffff" stroke="#0056D2" stroke-width="2" />
+                      <path d="M 0 -12 L 0 16" stroke="#0056D2" stroke-width="2.5" />
+                      <circle cx="0" cy="2" r="10" fill="#ffffff" stroke="#0056D2" stroke-width="2" />
+                      <path d="M -10 2 L 10 2" stroke="#0056D2" stroke-width="1.5" />
+                      <path d="M 0 -8 L 0 12" stroke="#0056D2" stroke-width="1.5" />
+                      <ellipse cx="0" cy="2" rx="5" ry="9" fill="none" stroke="#0056D2" stroke-width="1.2" />
+                    </g>
+                    <path d="M 70 240 L 95 220 L 105 255 L 70 240 Z" fill="#0b2347" />
+                    <path d="M 330 240 L 305 220 L 295 255 L 330 240 Z" fill="#0b2347" />
+                    <path d="M 68 250 L 100 230 L 100 270 L 68 282 Z" fill="#0056D2" />
+                    <path d="M 332 250 L 300 230 L 300 270 L 332 282 Z" fill="#0056D2" />
+                    <path d="M 90 232 C 150 250, 250 250, 310 232 L 302 278 C 242 296, 158 296, 98 278 Z" fill="#0056D2" stroke="#023e9c" stroke-width="1.5" />
+                    <text x="200" y="266" fill="#ffffff" font-size="20" font-weight="900" font-family="sans-serif" text-anchor="middle" letter-spacing="2">TITAN NETWORK</text>
+                    <text x="200" y="320" fill="#0056D2" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" letter-spacing="1">TAJ INSTITUTE OF TECHNOLOGY</text>
+                    <text x="200" y="340" fill="#0056D2" font-size="14" font-weight="800" font-family="sans-serif" text-anchor="middle" letter-spacing="1">&amp; APPLIED NETWORK</text>
+                  </svg>
 
                   <div class="brand-titles">
                     <div class="brand-logo-text">titan</div>
@@ -514,7 +559,52 @@ export const CertificatesModal: React.FC<CertificatesModalProps> = ({
               <div className="flex flex-col items-start z-10">
                 <div className="flex items-center gap-3 mb-1">
                   {/* TITAN Emblem Logo */}
-                  <img src="/Titan-transparent-proper.png" alt="TITAN Logo" style={{ width: 40, height: 42, objectFit: 'contain' }} className="shrink-0" />
+                  <svg width="40" height="42" viewBox="0 0 400 420" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                    <g fill="#e0a328">
+                      <path d="M 120 220 C 80 190, 75 140, 95 90 C 70 120, 65 170, 105 210 Z" />
+                      <path d="M 100 200 C 60 170, 60 120, 85 70 C 55 100, 55 150, 85 190 Z" />
+                      <path d="M 85 175 C 45 145, 50 95, 80 50 C 45 80, 45 130, 70 165 Z" />
+                      <path d="M 102 240 C 70 230, 60 210, 80 200 C 95 210, 100 230, 102 240 Z" />
+                      <path d="M 82 215 C 50 200, 45 180, 65 172 C 80 182, 82 205, 82 215 Z" />
+                      <path d="M 68 185 C 38 168, 35 148, 55 140 C 70 152, 70 175, 68 185 Z" />
+                      <path d="M 60 150 C 30 130, 30 110, 50 102 C 65 115, 62 140, 60 150 Z" />
+                      <path d="M 62 115 C 35 92, 40 70, 58 68 C 70 82, 65 105, 62 115 Z" />
+                      <path d="M 72 80 C 50 55, 60 38, 75 40 C 85 55, 78 72, 72 80 Z" />
+                      <path d="M 90 52 C 72 28, 88 15, 100 22 C 105 38, 95 50, 90 52 Z" />
+                      <path d="M 280 220 C 320 190, 325 140, 305 90 C 330 120, 335 170, 295 210 Z" />
+                      <path d="M 300 200 C 340 170, 340 120, 315 70 C 345 100, 345 150, 315 190 Z" />
+                      <path d="M 315 175 C 355 145, 350 95, 320 50 C 355 80, 355 130, 330 165 Z" />
+                      <path d="M 298 240 C 330 230, 340 210, 320 200 C 305 210, 300 230, 298 240 Z" />
+                      <path d="M 318 215 C 350 200, 355 180, 335 172 C 320 182, 318 205, 318 215 Z" />
+                      <path d="M 332 185 C 362 168, 365 148, 345 140 C 330 152, 330 175, 332 185 Z" />
+                      <path d="M 340 150 C 370 130, 370 110, 350 102 C 335 115, 338 140, 340 150 Z" />
+                      <path d="M 338 115 C 365 92, 360 70, 342 68 C 330 82, 335 105, 338 115 Z" />
+                      <path d="M 328 80 C 350 55, 340 38, 325 40 C 315 55, 322 72, 328 80 Z" />
+                      <path d="M 310 52 C 328 28, 312 15, 300 22 C 295 38, 305 50, 310 52 Z" />
+                    </g>
+                    <path d="M 110 55 C 160 70, 240 70, 290 55 L 298 140 C 298 210, 200 250, 200 250 C 200 250, 102 210, 102 140 Z" fill="#f2b438" stroke="#df9b27" strokeWidth="3" />
+                    <path d="M 116 62 C 160 75, 240 75, 284 62 L 291 138 C 291 202, 200 239, 200 239 C 200 239, 109 202, 109 138 Z" fill="#ffffff" />
+                    <path d="M 120 66 C 160 78, 240 78, 280 66 L 286 136 C 286 196, 200 232, 200 232 C 200 232, 114 196, 114 136 Z" fill="#0056D2" />
+                    <text x="200" y="88" fill="#ffffff" fontSize="13" fontWeight="800" fontFamily="sans-serif" textAnchor="middle" letterSpacing="2.5">ESTD, 2025</text>
+                    <rect x="114" y="102" width="172" height="36" fill="#ffffff" />
+                    <text x="200" y="130" fill="#0056D2" fontSize="32" fontWeight="900" fontFamily="sans-serif" textAnchor="middle" letterSpacing="5">TITAN</text>
+                    <g transform="translate(200, 172)">
+                      <path d="M -36 -16 Q -18 -22, 0 -12 Q 18 -22, 36 -16 L 36 12 Q 18 6, 0 16 Q -18 6, -36 12 Z" fill="#ffffff" stroke="#0056D2" strokeWidth="2" />
+                      <path d="M 0 -12 L 0 16" stroke="#0056D2" strokeWidth="2.5" />
+                      <circle cx="0" cy="2" r="10" fill="#ffffff" stroke="#0056D2" strokeWidth="2" />
+                      <path d="M -10 2 L 10 2" stroke="#0056D2" strokeWidth="1.5" />
+                      <path d="M 0 -8 L 0 12" stroke="#0056D2" strokeWidth="1.5" />
+                      <ellipse cx="0" cy="2" rx="5" ry="9" fill="none" stroke="#0056D2" strokeWidth="1.2" />
+                    </g>
+                    <path d="M 70 240 L 95 220 L 105 255 L 70 240 Z" fill="#0b2347" />
+                    <path d="M 330 240 L 305 220 L 295 255 L 330 240 Z" fill="#0b2347" />
+                    <path d="M 68 250 L 100 230 L 100 270 L 68 282 Z" fill="#0056D2" />
+                    <path d="M 332 250 L 300 230 L 300 270 L 332 282 Z" fill="#0056D2" />
+                    <path d="M 90 232 C 150 250, 250 250, 310 232 L 302 278 C 242 296, 158 296, 98 278 Z" fill="#0056D2" stroke="#023e9c" strokeWidth="1.5" />
+                    <text x="200" y="266" fill="#ffffff" fontSize="20" fontWeight="900" fontFamily="sans-serif" textAnchor="middle" letterSpacing="2">TITAN NETWORK</text>
+                    <text x="200" y="320" fill="#0056D2" fontSize="14" fontWeight="800" fontFamily="sans-serif" textAnchor="middle" letterSpacing="1">TAJ INSTITUTE OF TECHNOLOGY</text>
+                    <text x="200" y="340" fill="#0056D2" fontSize="14" fontWeight="800" fontFamily="sans-serif" textAnchor="middle" letterSpacing="1">&amp; APPLIED NETWORK</text>
+                  </svg>
 
                   <div>
                     <div className="font-sans font-extrabold text-2xl sm:text-3xl text-[#0056D2] tracking-tighter leading-none">

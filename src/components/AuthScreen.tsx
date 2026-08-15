@@ -140,14 +140,14 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
   };
 
   const handleDemoLogin = (role: Role) => {
-    if (selectedRole === 'student') {
+    if (role === 'student') {
       onLogin('student', {
         name: 'Masab Bin Abdul Rehman',
         email: 'masab_bin.abdul_rehman@titan.edu.pk',
         id: 'TITAN-2025-468858',
         avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY2OfwmS2bIeSMUT_DnrlEfRIDAARXIsxGtcwuXbmeWA&s=10',
       });
-    } else if (selectedRole === 'teacher') {
+    } else if (role === 'teacher') {
       onLogin('teacher', {
         name: 'Prof. Dr. Shahnawaz Qureshi',
         email: 'shahnawaz_qureshi@titan.edu.pk',
@@ -169,18 +169,14 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
       
       {/* Left Pane - Branding & Animations */}
       <div className="hidden lg:flex w-1/2 relative bg-zinc-950 overflow-hidden flex-col justify-center items-center">
-        {/* Animated Video Background Overlay */}
+        {/* Animated Background Overlay */}
         <div className="absolute inset-0 z-0">
-           <video 
-             autoPlay 
-             loop 
-             muted 
-             playsInline
-             className="w-full h-full object-cover opacity-60"
-           >
-             <source src="/VID_20260815_221826_1.mp4" type="video/mp4" />
-           </video>
-           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/60 via-zinc-950/40 to-indigo-950/60 mix-blend-multiply" />
+           <img 
+             src="https://www.instagram.com/reel/DL9WC1DqwO3/?utm_source=ig_web_button_share_sheet" 
+             alt="University Campus" 
+             className="w-full h-full object-cover opacity-20"
+           />
+           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-900/80 via-zinc-950/80 to-indigo-950/90 mix-blend-multiply" />
            {/* Ripple Effect */}
            <motion.div
              initial={{ scale: 0, opacity: 0.8 }}
@@ -194,16 +190,16 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
         <motion.div
           animate={{ y: [0, -20, 0], opacity: [0.5, 0.8, 0.5] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 left-1/4 w-64 h-64 bg-indigo-600/30 rounded-full blur-3xl z-0 pointer-events-none"
+          className="absolute top-1/4 left-1/4 w-64 h-64 bg-indigo-600/20 rounded-full blur-3xl z-0"
         />
         <motion.div
           animate={{ y: [0, 30, 0], opacity: [0.3, 0.6, 0.3] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-600/20 rounded-full blur-3xl z-0 pointer-events-none"
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl z-0"
         />
 
-        {/* Content with Glassmorphism */}
-        <div className="relative z-10 p-12 text-center w-full max-w-2xl flex flex-col items-center">
+        {/* Content */}
+        <div className="relative z-10 p-12 text-center max-w-xl flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.5, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -215,12 +211,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
             }}
             className="mb-10 relative drop-shadow-2xl"
           >
-             {/* Logo Container */}
-             <div className="relative flex justify-center items-center">
-               <div className="absolute inset-0 bg-indigo-500/20 blur-[80px] rounded-full scale-[2]" />
-               <div className="relative z-10">
-                 <TitanLogo size="xl" variant="full" theme="dark" />
-               </div>
+             {/* Sleek modern glow behind the logo */}
+             <div className="absolute inset-0 bg-indigo-500/20 blur-[80px] rounded-full scale-[2]" />
+             <div className="relative z-10">
+               <TitanLogo size="xl" variant="full" theme="dark" />
              </div>
           </motion.div>
           
@@ -248,6 +242,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
       <div className={`w-full lg:w-1/2 flex flex-col items-center justify-center p-8 sm:p-12 lg:p-24 overflow-y-auto relative ${
         isDark ? 'bg-zinc-950' : 'bg-slate-50'
       }`}>
+        
         {/* Theme Toggle in top right */}
         {onToggleTheme && (
           <div className="absolute top-8 right-8">
@@ -290,68 +285,74 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
 
           {/* MODE: SIGN IN */}
           {mode === 'signin' && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-            >
+            <>
               {/* Role Selection Tabs */}
               <div className="mb-8">
                 <div className={`p-1.5 rounded-2xl border grid grid-cols-3 gap-1 text-xs font-mono font-bold ${
                   isDark ? 'bg-zinc-900/50 border-zinc-800' : 'bg-slate-100 border-zinc-300'
                 }`}>
                   <button
-                    onClick={() => { setSelectedRole('student'); setEmail('masab_bin.abdul_rehman@titan.edu.pk'); setPassword('password123'); }}
-                    className={`py-3 rounded-xl transition-all ${
+                    type="button"
+                    onClick={() => setSelectedRole('student')}
+                    className={`py-2.5 rounded-xl transition-all flex flex-col items-center justify-center gap-1 sm:flex-row ${
                       selectedRole === 'student'
-                        ? 'bg-emerald-500/20 text-emerald-500 shadow-sm border border-emerald-500/20'
-                        : isDark ? 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50' : 'text-zinc-500 hover:text-zinc-700 hover:bg-white/50'
+                        ? 'bg-indigo-600 text-white shadow-md'
+                        : isDark ? 'text-zinc-400 hover:text-white' : 'text-zinc-600 hover:text-zinc-900'
                     }`}
                   >
-                    Student
+                    <span className="material-symbols-outlined text-base">school</span>
+                    <span>Student</span>
                   </button>
+
                   <button
-                    onClick={() => { setSelectedRole('teacher'); setEmail('shahnawaz_qureshi@titan.edu.pk'); setPassword('password123'); }}
-                    className={`py-3 rounded-xl transition-all ${
+                    type="button"
+                    onClick={() => setSelectedRole('teacher')}
+                    className={`py-2.5 rounded-xl transition-all flex flex-col items-center justify-center gap-1 sm:flex-row ${
                       selectedRole === 'teacher'
-                        ? 'bg-indigo-500/20 text-indigo-500 shadow-sm border border-indigo-500/20'
-                        : isDark ? 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50' : 'text-zinc-500 hover:text-zinc-700 hover:bg-white/50'
+                        ? 'bg-indigo-600 text-white shadow-md'
+                        : isDark ? 'text-zinc-400 hover:text-white' : 'text-zinc-600 hover:text-zinc-900'
                     }`}
                   >
-                    Faculty
+                    <span className="material-symbols-outlined text-base">person</span>
+                    <span>Faculty</span>
                   </button>
+
                   <button
-                    onClick={() => { setSelectedRole('admin'); setEmail('admin@titan.edu.pk'); setPassword('password123'); }}
-                    className={`py-3 rounded-xl transition-all ${
+                    type="button"
+                    onClick={() => setSelectedRole('admin')}
+                    className={`py-2.5 rounded-xl transition-all flex flex-col items-center justify-center gap-1 sm:flex-row ${
                       selectedRole === 'admin'
-                        ? 'bg-amber-500/20 text-amber-500 shadow-sm border border-amber-500/20'
-                        : isDark ? 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50' : 'text-zinc-500 hover:text-zinc-700 hover:bg-white/50'
+                        ? 'bg-indigo-600 text-white shadow-md'
+                        : isDark ? 'text-zinc-400 hover:text-white' : 'text-zinc-600 hover:text-zinc-900'
                     }`}
                   >
-                    Admin
+                    <span className="material-symbols-outlined text-base">admin_panel_settings</span>
+                    <span>Admin</span>
                   </button>
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Auth Form */}
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
                   <label className={`block text-xs font-mono font-bold mb-1.5 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-                    Email Address
+                    Institutional Email
                   </label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
+                    placeholder={selectedRole === 'student' ? 'masab_bin.abdul_rehman@titan.edu.pk' : selectedRole === 'teacher' ? 'shahnawaz_qureshi@titan.edu.pk' : 'admin@titan.edu.pk'}
                     className={`w-full px-4 py-3.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all ${
-                      isDark ? 'bg-zinc-900/40 border border-white/10 text-white placeholder-zinc-500 focus:bg-zinc-900 focus:border-indigo-500' : 'bg-white border border-zinc-300 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:border-indigo-500'
+                      isDark ? 'bg-zinc-900/20 backdrop-blur-2xl border border-white/10 hover:bg-zinc-800/40 hover:border-white/30 text-white placeholder-zinc-500 focus:bg-zinc-900/60 focus:border-indigo-500 shadow-inner hover:shadow-indigo-500/10' : 'bg-white/30 backdrop-blur-2xl border border-zinc-200/50 hover:bg-white/60 hover:border-zinc-300 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:border-indigo-400 shadow-inner hover:shadow-indigo-500/10'
                     }`}
-                    required
                   />
                 </div>
+
                 <div>
-                  <label className={`block text-xs font-mono font-bold mb-1.5 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-                    Password
+                  <label className={`block text-xs font-mono font-bold mb-1.5 flex justify-between ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+                    <span>Password</span>
+                    <a href="#" className="text-indigo-500 hover:text-indigo-400 font-medium">Forgot?</a>
                   </label>
                   <input
                     type="password"
@@ -359,122 +360,256 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••••••"
                     className={`w-full px-4 py-3.5 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all ${
-                      isDark ? 'bg-zinc-900/40 border border-white/10 text-white placeholder-zinc-500 focus:bg-zinc-900 focus:border-indigo-500' : 'bg-white border border-zinc-300 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:border-indigo-500'
+                      isDark ? 'bg-zinc-900/20 backdrop-blur-2xl border border-white/10 hover:bg-zinc-800/40 hover:border-white/30 text-white placeholder-zinc-500 focus:bg-zinc-900/60 focus:border-indigo-500 shadow-inner hover:shadow-indigo-500/10' : 'bg-white/30 backdrop-blur-2xl border border-zinc-200/50 hover:bg-white/60 hover:border-zinc-300 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:border-indigo-400 shadow-inner hover:shadow-indigo-500/10'
                     }`}
-                    required
                   />
                 </div>
+
                 <button
                   type="submit"
-                  className={`w-full py-4 text-white rounded-2xl font-bold text-sm shadow-xl transition-all flex items-center justify-center gap-2 group ${
-                    selectedRole === 'student' ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/20' :
-                    selectedRole === 'teacher' ? 'bg-indigo-600 hover:bg-indigo-500 shadow-indigo-500/20' :
-                    'bg-amber-600 hover:bg-amber-500 shadow-amber-500/20'
-                  }`}
+                  className="w-full mt-4 py-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-2xl font-bold text-sm shadow-xl shadow-indigo-500/20 transition-all flex items-center justify-center gap-2 group"
                 >
-                  <span>Enter {selectedRole === 'student' ? 'Student' : selectedRole === 'teacher' ? 'Faculty' : 'Admin'} Portal</span>
+                  <span>Sign In</span>
                   <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
                 </button>
               </form>
 
-              <div className="pt-8 text-center text-sm">
+              {/* Mode Switcher */}
+              <div className="mt-8 pt-6 border-t border-zinc-200 dark:border-zinc-800/80 text-center text-sm">
                 <p className={isDark ? 'text-zinc-400' : 'text-zinc-600'}>
                   New Student?{' '}
                   <button
                     type="button"
-                    onClick={() => setMode('access_code')}
-                    className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline"
+                    onClick={() => {
+                      setMode('access_code');
+                      setAccessCodeError('');
+                      setAccessCode('');
+                    }}
+                    className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline inline-flex items-center gap-1 font-mono"
                   >
-                    Register with Access Code
+                    <span>Sign Up via Access Code</span>
+                    <span className="material-symbols-outlined text-sm">vpn_key</span>
                   </button>
                 </p>
               </div>
-            </motion.div>
+            </>
           )}
 
-          {/* MODE: ACCESS CODE */}
+          {/* MODE: ACCESS CODE ENTRY */}
           {mode === 'access_code' && (
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="w-full space-y-6"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-6"
             >
+              <div className={`p-4 rounded-2xl border text-xs flex items-start gap-3 ${
+                isDark ? 'bg-indigo-950/40 border-indigo-500/30 text-indigo-200' : 'bg-indigo-50 border-indigo-200 text-indigo-900'
+              }`}>
+                <span className="material-symbols-outlined text-indigo-400 shrink-0 mt-0.5 text-lg">admin_panel_settings</span>
+                <div className="space-y-1">
+                  <p className="font-bold font-mono uppercase tracking-wider text-[11px] text-indigo-400">Institutional Access Required</p>
+                  <p className="leading-relaxed">New students must enter the registration access code provided confidentially by the institutional administrator to proceed with registration.</p>
+                </div>
+              </div>
+
               <form onSubmit={handleVerifyAccessCode} className="space-y-5">
                 <div>
                   <label className={`block text-xs font-mono font-bold mb-1.5 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-                    12-Digit Access Code
+                    Enter Access Code
                   </label>
-                  <input
-                    type="text"
-                    value={accessCode}
-                    onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
-                    placeholder="TITAN-XXXX-XXXX"
-                    className={`w-full px-4 py-3.5 rounded-2xl text-sm font-mono tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all ${
-                      isDark ? 'bg-zinc-900/40 border border-white/10 text-white placeholder-zinc-500 focus:bg-zinc-900 focus:border-indigo-500' : 'bg-white border border-zinc-300 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:border-indigo-500'
-                    }`}
-                    required
-                  />
+                  <div className="relative">
+                    <input
+                      type="password"
+                      value={accessCode}
+                      onChange={(e) => {
+                        setAccessCode(e.target.value);
+                        if (accessCodeError) setAccessCodeError('');
+                      }}
+                      placeholder="••••••••••••"
+                      className={`w-full px-4 py-3.5 pl-11 rounded-2xl text-sm font-mono tracking-widest focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all ${
+                        isDark 
+                          ? 'bg-zinc-900/40 border border-white/10 text-white placeholder-zinc-500 focus:bg-zinc-900 focus:border-indigo-500' 
+                          : 'bg-white border border-zinc-300 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:border-indigo-500'
+                      }`}
+                      required
+                      autoFocus
+                    />
+                    <span className="material-symbols-outlined absolute left-3.5 top-3.5 text-indigo-400 text-lg">
+                      key
+                    </span>
+                  </div>
                 </div>
-                
+
+                {accessCodeError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2.5"
+                  >
+                    <span className="material-symbols-outlined text-base shrink-0">error</span>
+                    <span>{accessCodeError}</span>
+                  </motion.div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-bold text-sm shadow-xl shadow-indigo-500/20 transition-all flex items-center justify-center gap-2 group"
+                  className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-2xl font-bold text-sm shadow-xl shadow-indigo-500/20 transition-all flex items-center justify-center gap-2 group"
                 >
-                  Verify Code
-                  <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                  <span>Verify Access Code</span>
+                  <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">lock_open</span>
                 </button>
               </form>
-              
-              <div className="pt-4 text-center text-sm">
+
+              <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800/80 text-center">
                 <button
                   type="button"
                   onClick={() => setMode('signin')}
-                  className={`font-bold ${isDark ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-zinc-900'}`}
+                  className={`font-semibold hover:underline text-xs flex items-center justify-center gap-1.5 mx-auto ${
+                    isDark ? 'text-zinc-400 hover:text-white' : 'text-zinc-600 hover:text-zinc-900'
+                  }`}
                 >
-                  Back to Sign In
+                  <span className="material-symbols-outlined text-sm">arrow_back</span>
+                  <span>Back to Sign In</span>
                 </button>
               </div>
             </motion.div>
           )}
 
-          {/* MODE: SIGN UP */}
+          {/* MODE: STUDENT REGISTRATION FORM */}
           {mode === 'signup' && (
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="w-full"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-5"
             >
+              {/* Verified Code Banner */}
+              <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center justify-between">
+                <div className="flex items-center gap-2 font-mono font-bold">
+                  <span className="material-symbols-outlined text-sm">check_circle</span>
+                  <span>Access Code Verified</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('access_code');
+                    setAccessCodeError('');
+                  }}
+                  className="text-[11px] font-mono underline hover:text-white transition-colors"
+                >
+                  Change Code
+                </button>
+              </div>
+
+              {/* How to Get Started Guidance Banner */}
+              <div className={`p-4 rounded-2xl border text-xs transition-all ${
+                isDark ? 'bg-indigo-950/30 border-indigo-500/30 text-indigo-200' : 'bg-indigo-50/80 border-indigo-200 text-indigo-900'
+              }`}>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2 font-mono font-bold text-indigo-400">
+                    <span className="material-symbols-outlined text-base">help_outline</span>
+                    <span className="uppercase text-[11px] tracking-wider">How to Get Started</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowRegistrationGuide(!showRegistrationGuide)}
+                    className="text-[11px] font-mono text-indigo-400 hover:underline flex items-center gap-1"
+                  >
+                    <span>{showRegistrationGuide ? 'Hide Guide' : 'Show Guide'}</span>
+                    <span className="material-symbols-outlined text-sm">
+                      {showRegistrationGuide ? 'expand_less' : 'expand_more'}
+                    </span>
+                  </button>
+                </div>
+
+                {showRegistrationGuide && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="space-y-2 pt-1 border-t border-indigo-500/20 mt-2"
+                  >
+                    <p className="text-[11px] text-zinc-300 dark:text-zinc-300 font-sans leading-relaxed">
+                      Follow these simple steps to complete your registration in the TITAN database:
+                    </p>
+                    <ul className="space-y-1.5 text-[11px] font-mono pl-1">
+                      <li className="flex items-start gap-2">
+                        <span className="text-amber-400 font-bold">1.</span>
+                        <span><strong>First & Last Name:</strong> Enter your names to dynamically set up your portal identity.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-amber-400 font-bold">2.</span>
+                        <span><strong>Institutional Email:</strong> Auto-generated based on your name in <code className="text-indigo-300 font-bold">@titan.edu</code> format.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-amber-400 font-bold">3.</span>
+                        <span><strong>Password:</strong> Create a secure password for future portal access.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-amber-400 font-bold">4.</span>
+                        <span><strong>Unique Registration ID:</strong> Dynamically auto-assigned specifically for your student enrollment.</span>
+                      </li>
+                    </ul>
+                  </motion.div>
+                )}
+              </div>
+
               <form onSubmit={handleSubmit} className="space-y-4">
-                
-                {/* Profile Picture Upload */}
-                <div className="flex flex-col items-center justify-center mb-6">
-                  <div className="relative group cursor-pointer">
+                {/* Profile Picture Upload Box */}
+                <div className={`p-4 rounded-2xl border flex flex-col items-center justify-center text-center transition-all ${
+                  isDark ? 'bg-indigo-950/20 border-indigo-500/30' : 'bg-indigo-50/70 border-indigo-200'
+                }`}>
+                  <label className="block text-xs font-mono font-bold mb-2 text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm">photo_camera</span>
+                    Upload Student Profile Picture
+                  </label>
+                  <div className="relative group cursor-pointer my-1">
+                    <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-indigo-500/50 shadow-lg relative bg-zinc-800 flex items-center justify-center">
+                      {avatarPreview ? (
+                        <img src={avatarPreview} alt="Profile preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="material-symbols-outlined text-4xl text-indigo-400">account_circle</span>
+                      )}
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-[10px] font-mono font-bold">
+                        <span className="material-symbols-outlined text-xl">upload</span>
+                        <span>Change</span>
+                      </div>
+                    </div>
                     <input
                       type="file"
                       accept="image/*"
                       onChange={handleAvatarUpload}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                      title="Upload Profile Picture"
+                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                      title="Click or drop photo to upload profile picture"
                     />
-                    <div className={`w-24 h-24 rounded-full border-2 border-dashed flex items-center justify-center overflow-hidden transition-all ${
-                      isDark ? 'border-zinc-700 bg-zinc-900/50 group-hover:border-indigo-500 group-hover:bg-zinc-800' : 'border-zinc-300 bg-slate-50 group-hover:border-indigo-500 group-hover:bg-slate-100'
-                    }`}>
-                      {avatarPreview ? (
-                        <img src={avatarPreview} alt="Preview" className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="flex flex-col items-center text-zinc-400">
-                          <span className="material-symbols-outlined text-3xl">add_a_photo</span>
-                          <span className="text-[10px] mt-1 font-mono font-bold">UPLOAD</span>
-                        </div>
-                      )}
-                    </div>
                   </div>
-                  <p className={`text-[10px] font-mono mt-2 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>Max size: 5MB (JPEG/PNG)</p>
+                  <div className="mt-1 flex items-center gap-2">
+                    <label className="text-xs font-mono font-bold text-indigo-500 hover:text-indigo-400 hover:underline cursor-pointer">
+                      {avatarPreview ? 'Choose Different Image' : 'Select Photo File'}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAvatarUpload}
+                        className="hidden"
+                      />
+                    </label>
+                    {avatarPreview && (
+                      <button
+                        type="button"
+                        onClick={() => setAvatarPreview('')}
+                        className="text-[10px] font-mono text-rose-400 hover:underline"
+                      >
+                        Reset Photo
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-zinc-400 font-mono mt-1">
+                    PNG, JPG, or WEBP up to 5MB (Saved to Student Portal Database)
+                  </p>
                 </div>
-                
-                <div className="grid grid-cols-2 gap-4">
+
+                {/* First Name & Last Name Grid */}
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className={`block text-xs font-mono font-bold mb-1.5 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
                       First Name
@@ -488,8 +623,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                         isDark ? 'bg-zinc-900/40 border border-white/10 text-white placeholder-zinc-500 focus:bg-zinc-900 focus:border-indigo-500' : 'bg-white border border-zinc-300 text-zinc-900 placeholder-zinc-400 focus:bg-white focus:border-indigo-500'
                       }`}
                       required
+                      autoFocus
                     />
                   </div>
+
                   <div>
                     <label className={`block text-xs font-mono font-bold mb-1.5 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
                       Last Name
@@ -507,6 +644,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                   </div>
                 </div>
 
+                {/* Institutional Email Address (Auto-Generated) */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <label className={`block text-xs font-mono font-bold ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
@@ -531,6 +669,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                   />
                 </div>
 
+                {/* Password */}
                 <div>
                   <label className={`block text-xs font-mono font-bold mb-1.5 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
                     Password
@@ -547,6 +686,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                   />
                 </div>
 
+                {/* Student Registration ID (Auto-Generated Unique) */}
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
                     <label className={`block text-xs font-mono font-bold ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
@@ -577,7 +717,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                     </div>
                   </div>
                 </div>
-                
+
                 <button
                   type="submit"
                   className="w-full mt-2 py-4 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white rounded-2xl font-bold text-sm shadow-xl shadow-emerald-500/20 transition-all flex items-center justify-center gap-2 group"
@@ -586,7 +726,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                   <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">person_add</span>
                 </button>
               </form>
-              
+
               <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800/80 text-center text-sm">
                 <p className={isDark ? 'text-zinc-400' : 'text-zinc-600'}>
                   Already registered?{' '}
@@ -619,6 +759,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
               >
                 Student
               </button>
+
               <button
                 type="button"
                 onClick={() => handleDemoLogin('teacher')}
@@ -630,6 +771,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
               >
                 Faculty
               </button>
+
               <button
                 type="button"
                 onClick={() => handleDemoLogin('admin')}

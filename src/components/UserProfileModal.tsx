@@ -20,7 +20,6 @@ interface UserProfileModalProps {
   onSaveProfile: (updatedProfile: UserProfile) => void;
   theme?: 'dark' | 'light';
   onOpenCertificates?: () => void;
-  onOpenIdCard?: () => void;
 }
 
 export const UserProfileModal: React.FC<UserProfileModalProps> = ({
@@ -29,8 +28,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   profile,
   onSaveProfile,
   theme = 'dark',
-  onOpenCertificates,
-  onOpenIdCard
+  onOpenCertificates
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(profile.name);
@@ -254,32 +252,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                     className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-full transition-all font-mono shrink-0 shadow-xs"
                   >
                     Certificates
-                  </button>
-                </div>
-              )}
-              
-              {/* ID Card Action */}
-              {onOpenIdCard && (
-                <div className={`p-4 rounded-2xl border flex items-center justify-between gap-4 ${
-                  isDark ? 'bg-amber-950/20 border-amber-500/20' : 'bg-amber-50/80 border-amber-200'
-                }`}>
-                  <div className="space-y-0.5">
-                    <h4 className="font-headline font-bold text-xs flex items-center gap-1.5 text-amber-500">
-                      <span className="material-symbols-outlined text-sm">badge</span>
-                      Digital ID Card
-                    </h4>
-                    <p className="text-[11px] text-zinc-400">
-                      View and download your official student ID.
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => {
-                      onClose();
-                      onOpenIdCard();
-                    }}
-                    className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-zinc-900 font-bold text-xs rounded-full transition-all font-mono shrink-0 shadow-xs"
-                  >
-                    View ID Card
                   </button>
                 </div>
               )}

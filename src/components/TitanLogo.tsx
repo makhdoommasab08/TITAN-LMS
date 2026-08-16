@@ -181,7 +181,7 @@ export const TitanLogo: React.FC<TitanLogoProps> = ({
         textAnchor="middle"
         letterSpacing="1"
       >
-        TAJ INSTITUTE OF TECHNOLOGY
+        Taj Institute of Technology
       </text>
       <text
         x="200"
@@ -206,9 +206,6 @@ export const TitanLogo: React.FC<TitanLogoProps> = ({
     return (
       <div className={`flex flex-col items-center justify-center text-center gap-1 ${className}`}>
         {logoSvg}
-        <span className="font-headline font-black tracking-[0.22em] text-base uppercase text-[#e0a328]">
-          TITAN
-        </span>
       </div>
     );
   }
@@ -218,11 +215,11 @@ export const TitanLogo: React.FC<TitanLogoProps> = ({
       <div className={`flex flex-col items-center text-center gap-2 ${className}`}>
         {logoSvg}
         <div className="space-y-1">
-          <h1 className={`font-headline font-black tracking-widest text-xl sm:text-2xl uppercase ${textColor}`}>
+          <h1 className={`font-headline font-black tracking-widest text-xl sm:text-2xl ${textColor}`}>
             TITAN
           </h1>
-          <p className="font-serif uppercase font-bold text-xs sm:text-sm tracking-wider text-[#e0a328]">
-            TAJ INSTITUTE OF TECHNOLOGY & APPLIED NETWORK
+          <p className="font-bold text-xs sm:text-sm tracking-wider text-[#e0a328]" style={{ fontFamily: "'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif" }}>
+            Taj Institute of Technology & Applied Network
           </p>
           <p className={`text-[10px] font-mono ${subTextColor}`}>
             Established 2025 • Excellence in Technology & AI
@@ -237,7 +234,7 @@ export const TitanLogo: React.FC<TitanLogoProps> = ({
     <div className={`flex items-center gap-3 ${className}`}>
       {logoSvg}
       <div className="flex flex-col justify-center">
-        <span className="font-serif uppercase font-bold text-xs sm:text-sm tracking-wider text-[#e0a328] leading-tight">
+        <span className="font-bold text-xs sm:text-sm tracking-wider text-[#e0a328] leading-tight" style={{ fontFamily: "'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif" }}>
           Taj Institute of Technology & Applied Network
         </span>
       </div>

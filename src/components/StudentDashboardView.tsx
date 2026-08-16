@@ -2,6 +2,7 @@ import React from 'react';
 import { Course, RecentActivity, Deadline } from '../types';
 import { UserProfile } from './UserProfileModal';
 import { TitanLogo } from './TitanLogo';
+import { GlobalLeaderboard } from './GlobalLeaderboard';
 
 interface StudentDashboardViewProps {
   courses: Course[];
@@ -59,7 +60,7 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
           }`}>
             <div className="relative z-20 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="px-3.5 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider inline-flex items-center gap-1.5">
+                <span className="px-3.5 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-[11px] font-mono font-bold tracking-wider inline-flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                   Active Term • Spring 2025
                 </span>
@@ -157,7 +158,7 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
                 <>
                   <div>
                     <div className="flex justify-between items-center mb-4">
-                      <span className="px-3 py-1 bg-indigo-600 text-white rounded-full text-[10px] font-bold tracking-widest uppercase inline-block font-mono">
+                      <span className="px-3 py-1 bg-indigo-600 text-white rounded-full text-[10px] font-bold tracking-widest inline-block font-mono">
                         Next Lesson
                       </span>
                       <span className="text-xs text-zinc-500 font-mono">25:00</span>
@@ -198,7 +199,7 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
                 <div className="h-full flex flex-col justify-between space-y-4">
                   <div>
                     <div className="flex justify-between items-center mb-3">
-                      <span className="px-3 py-1 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full text-[10px] font-bold tracking-widest uppercase inline-block font-mono">
+                      <span className="px-3 py-1 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full text-[10px] font-bold tracking-widest inline-block font-mono">
                         Fresh Student Account
                       </span>
                     </div>
@@ -233,7 +234,7 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
           <div>
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">
-                <span className={`font-mono text-xs uppercase tracking-widest font-bold ${
+                <span className={`font-mono text-xs tracking-widest font-bold ${
                   isDark ? 'text-zinc-400' : 'text-zinc-600'
                 }`}>
                   {hasEnrolledCourses ? 'TITAN Enrolled Programs' : 'My Enrolled Courses (0)'}
@@ -268,7 +269,7 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
                       }`}
                       style={{ backgroundImage: `url(${course.image})` }}
                     />
-                    <span className="text-[10px] font-mono font-bold text-indigo-400 uppercase tracking-widest block mb-1">
+                    <span className="text-[10px] font-mono font-bold text-indigo-400 tracking-widest block mb-1">
                       {course.category}
                     </span>
                     <h4 className="font-bold text-lg mb-1 font-headline">
@@ -307,7 +308,7 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
           <div id="course-catalog-section" className="pt-4 border-t border-zinc-800/60">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <span className="px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider">
+                <span className="px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-[10px] font-mono font-bold tracking-wider">
                   Academic Degree Path
                 </span>
                 <h3 className="font-headline font-bold text-2xl text-white mt-1">Available University Courses</h3>
@@ -331,7 +332,7 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
                         style={{ backgroundImage: `url(${ac.image})` }}
                       />
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-[10px] font-mono font-bold text-indigo-400 uppercase tracking-widest">
+                        <span className="text-[10px] font-mono font-bold text-indigo-400 tracking-widest">
                           {ac.category}
                         </span>
                         <span className="text-[10px] font-mono text-zinc-400">
@@ -428,13 +429,13 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
               </div>
               <div className="text-right">
                 <span className="font-mono text-3xl font-black">{streakDays}</span>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 font-mono">
+                <p className="text-[10px] font-bold tracking-widest text-zinc-500 font-mono">
                   Day Streak
                 </p>
               </div>
             </div>
             <p className={`text-xs leading-relaxed mb-4 font-body ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-              You're on fire! Keep learning today to reach a {streakDays + 1}-day streak at Taj Institute.
+              You're on fire! Keep learning today to reach a {streakDays + 1}-day streak at <span style={{ fontFamily: "'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif", fontWeight: "600" }}>Taj Institute</span>.
             </p>
             <div className="flex gap-1.5">
               {[1, 2, 3, 4, 5, 6, 7].map((day) => (
@@ -505,7 +506,7 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
               </div>
               <h4 className="font-headline font-bold text-base mb-1">TITAN Certifications</h4>
               <p className={`text-xs mb-4 ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-                Earn official credentials from Taj Institute of Technology & Applied Networks.
+                Earn official credentials from <span style={{ fontFamily: "'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif", fontWeight: "600" }}>Taj Institute of Technology & Applied Networks</span>.
               </p>
               <button
                 onClick={onOpenCertificates}
@@ -515,6 +516,9 @@ export const StudentDashboardView: React.FC<StudentDashboardViewProps> = ({
               </button>
             </div>
           )}
+
+          {/* Global Leaderboard Widget */}
+          <GlobalLeaderboard theme={theme} currentUserName={userProfile?.name || 'Student'} />
         </div>
       </div>
     </div>

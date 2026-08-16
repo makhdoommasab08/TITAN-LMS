@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Role } from '../types';
 import { TitanLogo } from './TitanLogo';
 import { motion } from 'motion/react';
+import { auth, googleProvider, db } from '../lib/firebase';
+import { signInWithPopup } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 interface AuthScreenProps {
   onLogin: (role: Role, userDetails: { name: string; email: string; id: string; avatar?: string }) => void;
@@ -34,6 +37,36 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
   const [avatarPreview, setAvatarPreview] = useState<string>('');
 
   const isDark = theme === 'dark';
+
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      const userRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(userRef);
+      
+      let role = selectedRole;
+      if (!docSnap.exists()) {
+        await setDoc(userRef, {
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          role: selectedRole
+        });
+      } else {
+        role = docSnap.data().role || selectedRole;
+      }
+      
+      onLogin(role, {
+        name: user.displayName || "User",
+        email: user.email || "",
+        id: user.uid,
+        avatar: user.photoURL || undefined
+      });
+    } catch (error) {
+      console.error("Error signing in with Google", error);
+    }
+  };
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -176,11 +209,11 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
              loop 
              muted 
              playsInline
-             className="w-full h-full object-cover opacity-40 mix-blend-luminosity"
+             className="w-full h-full object-cover opacity-60"
            >
              <source src="/campus-video.mp4" type="video/mp4" />
            </video>
-           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-950/90 via-zinc-950/80 to-indigo-900/80 mix-blend-multiply" />
+           <div className="absolute inset-0 bg-gradient-to-tr from-indigo-950/80 via-zinc-950/70 to-indigo-900/80 mix-blend-multiply" />
            {/* Ripple Effect */}
            <motion.div
              initial={{ scale: 0, opacity: 0.8 }}
@@ -237,7 +270,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-zinc-400 leading-relaxed text-lg"
           >
-            Access world-class resources, manage your academic journey, and connect with brilliant minds at the Taj Institute of Technology and Applied Networks.
+            Access world-class resources, manage your academic journey, and connect with brilliant minds at the <span style={{ fontFamily: "'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif", fontWeight: "600" }}>Taj Institute of Technology & Applied Networks</span>.
           </motion.p>
         </div>
       </div>
@@ -270,7 +303,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
             <div className="flex justify-center lg:hidden mb-8">
                <TitanLogo size="md" variant="horizontal" theme={theme} />
             </div>
-            <span className={`px-3 py-1 text-xs font-mono font-bold uppercase tracking-widest inline-block rounded-full border ${
+            <span className={`px-3 py-1 text-xs font-mono font-bold tracking-widest inline-block rounded-full border ${
               isDark ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' : 'bg-indigo-100 border-indigo-200 text-indigo-700'
             }`}>
               {mode === 'access_code' ? 'Code Verification' : mode === 'signup' ? 'Student Registration' : 'Secure Portal'}
@@ -376,6 +409,20 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                   <span>Sign In</span>
                   <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
                 </button>
+                <div className="relative flex items-center gap-4 py-2">
+                  <div className={`flex-1 border-t ${isDark ? "border-zinc-800" : "border-zinc-200"}`}></div>
+                  <span className={`text-xs font-mono ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>OR</span>
+                  <div className={`flex-1 border-t ${isDark ? "border-zinc-800" : "border-zinc-200"}`}></div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-3 transition-all ${isDark ? "bg-white text-zinc-900 hover:bg-zinc-200" : "bg-zinc-900 text-white hover:bg-zinc-800"}`}
+                >
+                  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+                  Sign in with Google
+                </button>
+
               </form>
 
               {/* Mode Switcher */}
@@ -412,7 +459,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
               }`}>
                 <span className="material-symbols-outlined text-indigo-400 shrink-0 mt-0.5 text-lg">admin_panel_settings</span>
                 <div className="space-y-1">
-                  <p className="font-bold font-mono uppercase tracking-wider text-[11px] text-indigo-400">Institutional Access Required</p>
+                  <p className="font-bold font-mono tracking-wider text-[11px] text-indigo-400">Institutional Access Required</p>
                   <p className="leading-relaxed">New students must enter the registration access code provided confidentially by the institutional administrator to proceed with registration.</p>
                 </div>
               </div>
@@ -463,6 +510,20 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                   <span>Verify Access Code</span>
                   <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">lock_open</span>
                 </button>
+                <div className="relative flex items-center gap-4 py-2">
+                  <div className={`flex-1 border-t ${isDark ? "border-zinc-800" : "border-zinc-200"}`}></div>
+                  <span className={`text-xs font-mono ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>OR</span>
+                  <div className={`flex-1 border-t ${isDark ? "border-zinc-800" : "border-zinc-200"}`}></div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-3 transition-all ${isDark ? "bg-white text-zinc-900 hover:bg-zinc-200" : "bg-zinc-900 text-white hover:bg-zinc-800"}`}
+                >
+                  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+                  Sign in with Google
+                </button>
+
               </form>
 
               <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800/80 text-center">
@@ -563,7 +624,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                 <div className={`p-4 rounded-2xl border flex flex-col items-center justify-center text-center transition-all ${
                   isDark ? 'bg-indigo-950/20 border-indigo-500/30' : 'bg-indigo-50/70 border-indigo-200'
                 }`}>
-                  <label className="block text-xs font-mono font-bold mb-2 text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <label className="block text-xs font-mono font-bold mb-2 text-indigo-400 tracking-wider flex items-center gap-1.5">
                     <span className="material-symbols-outlined text-sm">photo_camera</span>
                     Upload Student Profile Picture
                   </label>
@@ -729,6 +790,20 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                   <span>Complete Registration & Enter Portal</span>
                   <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform">person_add</span>
                 </button>
+                <div className="relative flex items-center gap-4 py-2">
+                  <div className={`flex-1 border-t ${isDark ? "border-zinc-800" : "border-zinc-200"}`}></div>
+                  <span className={`text-xs font-mono ${isDark ? "text-zinc-500" : "text-zinc-400"}`}>OR</span>
+                  <div className={`flex-1 border-t ${isDark ? "border-zinc-800" : "border-zinc-200"}`}></div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                  className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-3 transition-all ${isDark ? "bg-white text-zinc-900 hover:bg-zinc-200" : "bg-zinc-900 text-white hover:bg-zinc-800"}`}
+                >
+                  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+                  Sign in with Google
+                </button>
+
               </form>
 
               <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800/80 text-center text-sm">
@@ -748,7 +823,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
 
           {/* Quick Demo Access */}
           <div className="mt-8 text-center">
-            <p className={`text-[10px] font-mono uppercase tracking-widest font-bold mb-4 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
+            <p className={`text-[10px] font-mono tracking-widest font-bold mb-4 ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>
               One-Click Demo Access
             </p>
             <div className="grid grid-cols-3 gap-3 font-mono text-[11px]">

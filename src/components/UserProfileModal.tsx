@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { TitanLogo } from './TitanLogo';
+import { StudentIDCard } from './StudentIDCard';
+import { Flame, Star, Zap, Award } from 'lucide-react';
+
+const mockBadges = [
+  { icon: Flame, title: 'Rising Star', color: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500/20', date: 'Aug 14, 2026' },
+  { icon: Star, title: 'Perfect Score', color: 'text-amber-300', bg: 'bg-amber-500/10', border: 'border-amber-500/20', date: 'Aug 10, 2026' },
+  { icon: Zap, title: 'Quick Thinker', color: 'text-indigo-400', bg: 'bg-indigo-500/10', border: 'border-indigo-500/20', date: 'Jul 28, 2026' },
+  { icon: Award, title: 'Top 5%', color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', date: 'Jul 15, 2026' },
+];
 
 export interface UserProfile {
   name: string;
@@ -31,6 +40,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
   onOpenCertificates
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showIdCard, setShowIdCard] = useState(false);
   const [name, setName] = useState(profile.name);
   const [email, setEmail] = useState(profile.email);
   const [bio, setBio] = useState(profile.bio);
@@ -119,7 +129,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         }`}
       >
         {/* Banner Header with Titan Network Branding */}
-        <div className="relative h-28 bg-gradient-to-r from-indigo-900 via-slate-900 to-indigo-950 px-6 py-4 flex items-center justify-between border-b border-indigo-500/20">
+        <div className="relative h-32 bg-gradient-to-r from-indigo-900 via-slate-900 to-indigo-950 px-6 py-5 flex items-start justify-between border-b border-indigo-500/20">
           <div className="flex items-center gap-2">
             <TitanLogo size="sm" variant="horizontal" theme="dark" />
           </div>
@@ -134,7 +144,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         </div>
 
         {/* Profile Header Row - Avatar and Actions */}
-        <div className="px-6 relative -mt-10 pb-5 border-b border-zinc-800/60">
+        <div className="px-6 relative -mt-6 pb-6 border-b border-zinc-800/60">
           <div className="flex items-end justify-between gap-4">
             <div className="relative group shrink-0">
               <img
@@ -161,13 +171,22 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
             <div className="flex items-center gap-2 pb-1">
               {!isEditing ? (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full text-xs font-mono font-bold transition-all shadow-sm flex items-center gap-1.5"
-                >
-                  <span className="material-symbols-outlined text-sm">edit</span>
-                  Edit Profile
-                </button>
+                <>
+                  <button
+                    onClick={() => setShowIdCard(true)}
+                    className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-full text-xs font-mono font-bold transition-all shadow-sm flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm">badge</span>
+                    ID Card
+                  </button>
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full text-xs font-mono font-bold transition-all shadow-sm flex items-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm">edit</span>
+                    Edit Profile
+                  </button>
+                </>
               ) : (
                 <button
                   onClick={() => setIsEditing(false)}
@@ -202,7 +221,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             <div className="space-y-5">
               {/* Bio Quote */}
               <div className={`p-4 rounded-2xl border ${isDark ? 'bg-zinc-950/60 border-zinc-800/80' : 'bg-slate-50 border-zinc-200'}`}>
-                <p className="text-xs font-mono font-semibold uppercase text-zinc-400 mb-1.5">
+                <p className="text-xs font-mono font-semibold text-zinc-400 mb-1.5">
                   Academic Biography
                 </p>
                 <p className={`text-xs leading-relaxed ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
@@ -222,11 +241,46 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 </div>
                 <div className={`p-3.5 rounded-2xl border ${isDark ? 'bg-zinc-950/60 border-zinc-800/80' : 'bg-slate-50 border-zinc-200'}`}>
                   <p className="text-[10px] font-mono text-zinc-500 uppercase">Institution</p>
-                  <p className="font-semibold text-xs mt-0.5 truncate">Taj Institute of Technology</p>
+                  <p className="font-semibold text-xs mt-0.5 truncate" style={{ fontFamily: "'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif" }}>Taj Institute of Technology</p>
                 </div>
                 <div className={`p-3.5 rounded-2xl border ${isDark ? 'bg-zinc-950/60 border-zinc-800/80' : 'bg-slate-50 border-zinc-200'}`}>
                   <p className="text-[10px] font-mono text-zinc-500 uppercase">Enrollment</p>
                   <p className="font-semibold text-xs mt-0.5 text-emerald-400">Active • {profile.joinedDate}</p>
+                </div>
+              </div>
+
+              {/* Digital Badge Case */}
+              <div className={`p-5 rounded-2xl border ${isDark ? 'bg-zinc-950/60 border-zinc-800/80' : 'bg-slate-50 border-zinc-200'}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h4 className={`font-headline font-bold text-sm flex items-center gap-2 ${isDark ? 'text-zinc-100' : 'text-zinc-800'}`}>
+                      <span className="material-symbols-outlined text-amber-500">military_tech</span>
+                      Digital Badge Case
+                    </h4>
+                    <p className={`text-[11px] mt-0.5 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                      Badges earned from quizzes and achievements.
+                    </p>
+                  </div>
+                  <span className={`text-xs font-mono font-bold px-2.5 py-1 rounded-md ${isDark ? 'bg-zinc-800 text-zinc-400' : 'bg-slate-200 text-zinc-500'}`}>
+                    {mockBadges.length} Earned
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {mockBadges.map((badge, idx) => {
+                    const Icon = badge.icon;
+                    return (
+                      <div key={idx} className={`flex flex-col items-center justify-center text-center p-3 rounded-xl border ${badge.bg} ${badge.border} transition-transform hover:scale-105`}>
+                        <div className={`p-2 rounded-full mb-2 bg-black/20 ${badge.color}`}>
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <span className={`text-[10px] font-bold tracking-wider ${badge.color} leading-tight`}>
+                          {badge.title}
+                        </span>
+                        <span className="text-[9px] text-zinc-500 mt-1.5">{badge.date}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -402,7 +456,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         <div className={`p-4 border-t flex justify-between items-center text-xs font-mono ${
           isDark ? 'bg-zinc-950 border-zinc-800 text-zinc-400' : 'bg-slate-100 border-zinc-200 text-zinc-600'
         }`}>
-          <span>Taj Institute of Technology & Applied Networks</span>
+          <span style={{ fontFamily: "'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif" }}>Taj Institute of Technology & Applied Networks</span>
           <button
             onClick={onClose}
             className="px-4 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-white rounded-full font-bold transition-colors"
@@ -411,6 +465,14 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           </button>
         </div>
       </div>
+
+      {showIdCard && (
+        <StudentIDCard 
+          profile={profile} 
+          onClose={() => setShowIdCard(false)} 
+          theme={theme} 
+        />
+      )}
     </div>
   );
 };

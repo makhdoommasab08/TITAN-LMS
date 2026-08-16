@@ -132,13 +132,12 @@ export const CertificatesModal: React.FC<CertificatesModalProps> = ({
               line-height: 1;
             }
             .institute-full-name {
-              font-family: system-ui, -apple-system, sans-serif;
+              font-family: 'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif;
               font-size: 9px;
               font-weight: 800;
               color: #1e3a8a;
               letter-spacing: 0.8px;
-              text-transform: uppercase;
-              margin-top: 3px;
+                            margin-top: 3px;
             }
             .issue-date {
               font-family: system-ui, -apple-system, sans-serif;
@@ -208,8 +207,7 @@ export const CertificatesModal: React.FC<CertificatesModalProps> = ({
               font-weight: 700;
               letter-spacing: 1.2px;
               color: #1d4ed8;
-              text-transform: uppercase;
-            }
+                          }
             .seal-brand {
               font-family: system-ui, -apple-system, sans-serif;
               font-size: 13px;
@@ -223,8 +221,7 @@ export const CertificatesModal: React.FC<CertificatesModalProps> = ({
               font-weight: 800;
               letter-spacing: 0.8px;
               color: #2563eb;
-              text-transform: uppercase;
-            }
+                          }
 
             /* Watermark Rosette SVG */
             .rosette-watermark {
@@ -313,7 +310,7 @@ export const CertificatesModal: React.FC<CertificatesModalProps> = ({
               color: #64748b;
             }
             .signatory-org {
-              font-family: system-ui, -apple-system, sans-serif;
+              font-family: 'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif;
               font-size: 9.5px;
               font-weight: 600;
               color: #0056D2;
@@ -500,7 +497,7 @@ export const CertificatesModal: React.FC<CertificatesModalProps> = ({
             </div>
             <div>
               <h2 className="text-lg font-black font-headline tracking-tight text-white">Academic Certifications</h2>
-              <p className="text-xs font-mono text-blue-400">Taj Institute of Technology & Applied Network Credentials</p>
+              <p className="text-xs font-mono text-blue-400" style={{ fontFamily: "'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif" }}>Taj Institute of Technology & Applied Network Credentials</p>
             </div>
           </div>
 
@@ -516,7 +513,7 @@ export const CertificatesModal: React.FC<CertificatesModalProps> = ({
         <div className={`p-4 border-b flex items-center gap-2 overflow-x-auto custom-scrollbar ${
           isDark ? 'bg-slate-900/90 border-blue-950' : 'bg-slate-100 border-slate-200'
         }`}>
-          <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider shrink-0 mr-2">
+          <span className="text-xs font-mono font-bold text-slate-400 tracking-wider shrink-0 mr-2">
             Select Course:
           </span>
           {courses.map((course) => {
@@ -610,7 +607,7 @@ export const CertificatesModal: React.FC<CertificatesModalProps> = ({
                     <div className="font-sans font-extrabold text-2xl sm:text-3xl text-[#0056D2] tracking-tighter leading-none">
                       titan
                     </div>
-                    <div className="font-sans text-[8px] sm:text-[9.5px] font-extrabold tracking-wider text-slate-700 uppercase mt-0.5">
+                    <div className="text-[8px] sm:text-[9.5px] font-extrabold tracking-wider text-slate-700 mt-0.5" style={{ fontFamily: "'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif" }}>
                       Taj Institute of Technology & Applied Network
                     </div>
                   </div>
@@ -696,7 +693,7 @@ export const CertificatesModal: React.FC<CertificatesModalProps> = ({
                   <span className="font-sans text-[8px] sm:text-[10px] text-slate-500">
                     Lead Faculty Instructor & Program Manager
                   </span>
-                  <span className="font-sans text-[8px] sm:text-[9px] font-semibold text-[#0056D2]">
+                  <span className="text-[8px] sm:text-[9px] font-semibold text-[#0056D2]" style={{ fontFamily: "'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif" }}>
                     Taj Institute of Technology & Applied Network
                   </span>
                 </div>

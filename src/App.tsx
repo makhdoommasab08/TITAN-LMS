@@ -10,6 +10,8 @@ import {
   INITIAL_METRICS,
   INITIAL_RESOURCES,
 } from './data/mockData';
+import { VideoAnalysisView } from './components/VideoAnalysisView';
+
 import { BackgroundShader } from './components/BackgroundShader';
 import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
@@ -36,6 +38,7 @@ import { SettingsModal } from './components/SettingsModal';
 import { NotificationsPanel } from './components/NotificationsPanel';
 import { StudentAssignmentsView } from './components/StudentAssignmentsView';
 import { TeacherAssignmentsView } from './components/TeacherAssignmentsView';
+import { LeaderboardProvider } from './context/LeaderboardContext';
 
 const ThemeTransitionOverlay = ({ isDark }: { isDark: boolean }) => (
   <AnimatePresence initial={false}>
@@ -361,7 +364,7 @@ export default function App() {
       studentId: userProfile.studentId,
       studentName: userProfile.name,
       content,
-      status: 'submitted',
+      status: 'submitted' as const,
       submittedAt: new Date().toISOString()
     };
     const updated = [...assignmentSubmissions, submission];
@@ -618,20 +621,21 @@ export default function App() {
           theme={theme}
           onToggleTheme={toggleTheme}
         />
-        <ToastAlert toast={toast} onClose={() => setToast((prev) => ({ ...prev, isVisible: false }))} />
+        <ToastAlert message={toast.message} subtitle={toast.subtitle} isVisible={toast.isVisible} onClose={() => setToast((prev) => ({ ...prev, isVisible: false }))} />
       </div>
     );
   }
 
   return (
-    <div className={`min-h-screen font-body selection:bg-indigo-500 selection:text-white relative transition-colors duration-300 ${
-      isDark ? 'bg-zinc-950 text-white' : 'bg-slate-50 text-zinc-900'
-    }`}>
-      <ThemeTransitionOverlay isDark={isDark} />
-      {/* Background Animated WebGL Canvas Shader in Dark Mode */}
-      {isDark && <BackgroundShader />}
+    <LeaderboardProvider quizAttempts={quizAttempts} currentUserName={userProfile?.name || 'Student'}>
+      <div className={`min-h-screen font-body selection:bg-indigo-500 selection:text-white relative transition-colors duration-300 ${
+        isDark ? 'bg-zinc-950 text-white' : 'bg-slate-50 text-zinc-900'
+      }`}>
+        <ThemeTransitionOverlay isDark={isDark} />
+        {/* Background Animated WebGL Canvas Shader in Dark Mode */}
+        {isDark && <BackgroundShader />}
 
-      <div className="relative z-10 flex min-h-screen">
+        <div className="relative z-10 flex min-h-screen">
         {/* Navigation Sidebar */}
         <Sidebar
           role={role}
@@ -753,7 +757,7 @@ export default function App() {
                     >
                       <div>
                         <div className="flex justify-between items-start mb-4">
-                          <span className="px-3 py-1 bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider">
+                          <span className="px-3 py-1 bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 rounded-full text-[10px] font-mono font-bold tracking-wider">
                             {course.category}
                           </span>
                           <span className="text-xs font-mono font-bold text-emerald-500">
@@ -771,7 +775,7 @@ export default function App() {
                       <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800 space-y-3">
                         <div className="flex justify-between text-xs font-mono">
                           <span className={theme === 'dark' ? 'text-zinc-400' : 'text-zinc-600'}>
-                            {course.instructorName}
+                            {course.instructor}
                           </span>
                           <span className="font-bold">{course.completedLessons}/{course.totalLessons} Lessons</span>
                         </div>
@@ -820,17 +824,17 @@ export default function App() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                   <div className={`p-6 border rounded-[2rem] ${theme === 'dark' ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-zinc-200 shadow-sm'}`}>
-                    <p className="text-xs font-mono uppercase tracking-wider text-zinc-500">Cumulative GPA</p>
+                    <p className="text-xs font-mono tracking-wider text-zinc-500">Cumulative GPA</p>
                     <h2 className="text-4xl font-bold font-headline mt-2 text-indigo-500">3.92 / 4.0</h2>
                     <p className="text-xs text-emerald-500 font-mono mt-2">✦ Top 5% of Department</p>
                   </div>
                   <div className={`p-6 border rounded-[2rem] ${theme === 'dark' ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-zinc-200 shadow-sm'}`}>
-                    <p className="text-xs font-mono uppercase tracking-wider text-zinc-500">Credits Completed</p>
+                    <p className="text-xs font-mono tracking-wider text-zinc-500">Credits Completed</p>
                     <h2 className="text-4xl font-bold font-headline mt-2 text-emerald-500">42 / 60</h2>
                     <p className="text-xs text-zinc-400 font-mono mt-2">70% Degree Completion</p>
                   </div>
                   <div className={`p-6 border rounded-[2rem] ${theme === 'dark' ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-zinc-200 shadow-sm'}`}>
-                    <p className="text-xs font-mono uppercase tracking-wider text-zinc-500">Class Attendance</p>
+                    <p className="text-xs font-mono tracking-wider text-zinc-500">Class Attendance</p>
                     <h2 className="text-4xl font-bold font-headline mt-2 text-amber-500">98.4%</h2>
                     <p className="text-xs text-emerald-500 font-mono mt-2">Perfect Record</p>
                   </div>
@@ -978,7 +982,7 @@ export default function App() {
                     <div key={day} className={`p-6 border rounded-[2rem] space-y-4 ${
                       theme === 'dark' ? 'bg-zinc-900 border-zinc-800' : 'bg-white border-zinc-200 shadow-sm'
                     }`}>
-                      <h3 className="font-mono text-xs font-bold uppercase tracking-wider text-indigo-500">{day} Lectures</h3>
+                      <h3 className="font-mono text-xs font-bold tracking-wider text-indigo-500">{day} Lectures</h3>
                       <div className="space-y-3">
                         <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
                           <p className="font-bold text-xs">09:00 AM - Algebra II</p>
@@ -1025,6 +1029,10 @@ export default function App() {
               </motion.div>
             </AnimatePresence>
           </div>
+            {activeTab === 'video_analysis' && (
+              <VideoAnalysisView theme={theme} />
+            )}
+
         </main>
       </div>
 
@@ -1104,6 +1112,7 @@ export default function App() {
         isVisible={toast.isVisible}
         onClose={() => setToast((prev) => ({ ...prev, isVisible: false }))}
       />
-    </div>
+      </div>
+    </LeaderboardProvider>
   );
 }

@@ -162,7 +162,7 @@ export const CourseResourcesView: React.FC<CourseResourcesViewProps> = ({
               <div className="p-1.5 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
                 <TitanLogo size="sm" variant="horizontal" theme={theme} />
               </div>
-              <span className="px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-xs font-mono font-bold uppercase tracking-wider">
+              <span className="px-3 py-1 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-full text-xs font-mono font-bold tracking-wider">
                 Academic Library
               </span>
             </div>
@@ -171,7 +171,7 @@ export const CourseResourcesView: React.FC<CourseResourcesViewProps> = ({
               Course Resources & Study Materials
             </h1>
             <p className={`text-sm leading-relaxed ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
-              Access verified lecture handbooks, slide decks, technical papers, Figma design kits, and interactive Google Colab notebooks curated by Taj Institute faculty.
+              Access verified lecture handbooks, slide decks, technical papers, Figma design kits, and interactive Google Colab notebooks curated by <span style={{ fontFamily: "'Source Serif 4', 'Source Serif 4 Variable', 'Source Serif Pro', serif", fontWeight: "600" }}>Taj Institute</span> faculty.
             </p>
           </div>
 
@@ -197,7 +197,7 @@ export const CourseResourcesView: React.FC<CourseResourcesViewProps> = ({
           </div>
           <div>
             <p className="font-headline font-black text-lg">{resources.length}</p>
-            <p className="text-[10px] font-mono uppercase text-zinc-400">Total Materials</p>
+            <p className="text-[10px] font-mono text-zinc-400">Total Materials</p>
           </div>
         </div>
 
@@ -209,7 +209,7 @@ export const CourseResourcesView: React.FC<CourseResourcesViewProps> = ({
           </div>
           <div>
             <p className="font-headline font-black text-lg text-amber-400">{bookmarkedCount}</p>
-            <p className="text-[10px] font-mono uppercase text-zinc-400">Bookmarked</p>
+            <p className="text-[10px] font-mono text-zinc-400">Bookmarked</p>
           </div>
         </div>
 
@@ -221,7 +221,7 @@ export const CourseResourcesView: React.FC<CourseResourcesViewProps> = ({
           </div>
           <div>
             <p className="font-headline font-black text-lg text-rose-400">{pdfCount}</p>
-            <p className="text-[10px] font-mono uppercase text-zinc-400">PDF Handbooks</p>
+            <p className="text-[10px] font-mono text-zinc-400">PDF Handbooks</p>
           </div>
         </div>
 
@@ -233,7 +233,7 @@ export const CourseResourcesView: React.FC<CourseResourcesViewProps> = ({
           </div>
           <div>
             <p className="font-headline font-black text-lg text-emerald-400">{slidesCount + linksCount}</p>
-            <p className="text-[10px] font-mono uppercase text-zinc-400">Decks & Links</p>
+            <p className="text-[10px] font-mono text-zinc-400">Decks & Links</p>
           </div>
         </div>
       </div>
@@ -263,7 +263,7 @@ export const CourseResourcesView: React.FC<CourseResourcesViewProps> = ({
 
           {/* Course Selector Dropdown */}
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider shrink-0 hidden sm:inline">
+            <span className="text-xs font-mono font-bold text-zinc-400 tracking-wider shrink-0 hidden sm:inline">
               Course:
             </span>
             <select
@@ -464,7 +464,7 @@ export const CourseResourcesView: React.FC<CourseResourcesViewProps> = ({
           }`}>
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-indigo-400">
+                <span className="text-[10px] font-mono font-bold tracking-wider text-indigo-400">
                   {activePreviewResource.courseTitle} • {activePreviewResource.category}
                 </span>
                 <h3 className="font-headline font-bold text-xl">{activePreviewResource.title}</h3>
